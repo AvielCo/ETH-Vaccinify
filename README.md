@@ -17,7 +17,7 @@
 
 ### Useful commands
 
-> `$ npm run t-init: "truffle init"`  
-> `$ npm run t-compile: "truffle compile"`  
-> `$ npm run t-migrate: "truffle migrate"`  
-> `$ npm run t-console: "truffle console"`
+> `$ npm run t-init` : "truffle init"  
+> `$ npm run t-compile` : "truffle compile"  
+> `$ npm run t-migrate` : "truffle migrate"  
+> `$ npm run t-console` : "truffle console"
