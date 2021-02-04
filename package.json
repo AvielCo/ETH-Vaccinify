@@ -5,10 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd client/src && npm start",
+    "dev": "cd client/src && npm run build",
     "t-init": "truffle init",
     "t-compile": "truffle compile",
     "t-migrate": "truffle migrate",
-    "t-console": "truffle console"
+    "t-console": "truffle console",
+    "t-build": "npm run t-compile && npm run t-migrate"
   },
   "repository": {
     "type": "git",

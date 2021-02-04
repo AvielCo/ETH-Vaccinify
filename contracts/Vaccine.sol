@@ -1,13 +1,26 @@
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.5.0;
 
 contract Vaccine {
     uint public vaccinatedCount = 0;
     struct Person{
+        uint id;
         string name;
-        string id;
+        string personId;
         uint256 vaccineDate;
         string vaccineLocation;
-        bool firstVaccine;
-        bool secondVaccine;
+        bool vaccinated;
     }
+
+    mapping(uint => Person) public people;
+
+    constructor(string memory _name, string memory _personId) public {
+        createPerson(_name, _personId);
+    }
+
+    function createPerson(string memory _name, string memory _personId) public{
+        vaccinatedCount++;
+        people[vaccinatedCount] = Person(vaccinatedCount, _name, _personId, 0, "", false);
+    }
+
+
 }
