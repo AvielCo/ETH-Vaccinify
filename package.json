@@ -1,0 +1,34 @@
+{
+  "name": "ETH-Vaccinify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "t-init": "truffle init",
+    "t-compile": "truffle compile",
+    "t-migrate": "truffle migrate",
+    "t-console": "truffle console"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AvielCo/ETH-Vaccinify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AvielCo/ETH-Vaccinify/issues"
+  },
+  "homepage": "https://github.com/AvielCo/ETH-Vaccinify#readme",
+  "dependencies": {
+    "bootstrap": "^4.6.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "lite-server": "^2.3.0",
+    "nodemon": "^1.17.3",
+    "truffle": "^5.1.64",
+    "truffle-contract": "3.0.6"
+  }
+}

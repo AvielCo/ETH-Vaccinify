@@ -1,0 +1,182 @@
+{
+  "contractName": "Vaccine",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/aviel/Desktop/Programming/ETH-Vaccinify/contracts/Vaccine.sol\":\"Vaccine\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/aviel/Desktop/Programming/ETH-Vaccinify/contracts/Vaccine.sol\":{\"keccak256\":\"0xbd5fb2c07fbfdccdfd4dda63db8d4d5eb907dcd5fd35eb9c51935cfaa3cb0683\",\"urls\":[\"bzz-raw://b14524dc187588adb801ec99f460bfa408e5f39a0c813df184e06a70ea8c8f96\",\"dweb:/ipfs/QmUfh2Z8dCofgDbvKEdCa6eJZU1u1RR2EgvcqRBk5ViitB\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a7231582061903100e024356c08f667c1f3a761912276a841f9b463f5abccdf6df0d4bc2f64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a7231582061903100e024356c08f667c1f3a761912276a841f9b463f5abccdf6df0d4bc2f64736f6c63430005100032",
+  "sourceMap": "36:39:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;36:39:0;;;;;;;",
+  "deployedSourceMap": "36:39:0:-;;;;;",
+  "source": "pragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract Vaccine {\r\n    string Name;\r\n}",
+  "sourcePath": "C:/Users/aviel/Desktop/Programming/ETH-Vaccinify/contracts/Vaccine.sol",
+  "ast": {
+    "absolutePath": "/C/Users/aviel/Desktop/Programming/ETH-Vaccinify/contracts/Vaccine.sol",
+    "exportedSymbols": {
+      "Vaccine": [
+        4
+      ]
+    },
+    "id": 5,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4,
+        "linearizedBaseContracts": [
+          4
+        ],
+        "name": "Vaccine",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 3,
+            "name": "Name",
+            "nodeType": "VariableDeclaration",
+            "scope": 4,
+            "src": "60:11:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_storage",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 2,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "60:6:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 5,
+        "src": "36:39:0"
+      }
+    ],
+    "src": "0:75:0"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/aviel/Desktop/Programming/ETH-Vaccinify/contracts/Vaccine.sol",
+      "exportedSymbols": {
+        "Vaccine": [
+          4
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".22",
+            "<",
+            "0.9",
+            ".0"
+          ]
+        },
+        "id": 1,
+        "name": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            4
+          ],
+          "name": "Vaccine",
+          "scope": 5
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "Name",
+              "scope": 4,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "string",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "string",
+                  "type": "string"
+                },
+                "id": 2,
+                "name": "ElementaryTypeName",
+                "src": "60:6:0"
+              }
+            ],
+            "id": 3,
+            "name": "VariableDeclaration",
+            "src": "60:11:0"
+          }
+        ],
+        "id": 4,
+        "name": "ContractDefinition",
+        "src": "36:39:0"
+      }
+    ],
+    "id": 5,
+    "name": "SourceUnit",
+    "src": "0:75:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x9E4B3330C49f06422418bce4BAf95b29fDF2aE2E",
+      "transactionHash": "0x9cca87fcc3ba8088776615e0fe326d319b09055c815d05e0414f11fc180b86fb"
+    }
+  },
+  "schemaVersion": "3.3.3",
+  "updatedAt": "2021-02-04T11:45:35.402Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
