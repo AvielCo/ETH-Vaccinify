@@ -21,6 +21,4 @@ contract Vaccine {
         vaccinatedCount++;
         people[vaccinatedCount] = Person(vaccinatedCount, _name, _personId, 0, "", false);
     }
-
-
 }
