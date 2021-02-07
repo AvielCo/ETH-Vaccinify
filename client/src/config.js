@@ -1,17 +1,6 @@
 export const VACCINE_ABI = [
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_personId',
-        type: 'string',
-      },
-    ],
+    inputs: [],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'constructor',
@@ -97,6 +86,31 @@ export const VACCINE_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: '_location',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: '_date',
+        type: 'uint256',
+      },
+    ],
+    name: 'updatePerson',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ];
 
-export const VACCINE_ADRS = '0x243bAE978A986839e8C629909ABD4132686029D9';
+export const VACCINE_ADRS = '0xC66cbBa2b697Ef01cf4FeDbdb46734ADF979b1a0';

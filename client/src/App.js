@@ -31,9 +31,7 @@ class App extends Component {
     const vaccineContract = new web3.eth.Contract(VACCINE_ABI, VACCINE_ADRS);
     this.setState({ vaccineContract });
 
-    const vaccinatedCount = await vaccineContract.methods
-      .vaccinatedCount()
-      .call();
+    const vaccinatedCount = await vaccineContract.methods.vaccinatedCount().call();
     this.setState({ vaccinatedCount });
 
     for (let i = 1; i <= vaccinatedCount; i++) {
@@ -57,6 +55,7 @@ class App extends Component {
         console.log(`created preson ${name} with id: ${id}`);
       });
   }
+
   handleChange(event) {
     if (event.target.id === 'name') {
       this.setState({ name: event.target.value });
@@ -65,25 +64,25 @@ class App extends Component {
     }
   }
 
+  updatePerson = async (id, location, date) => {
+    const { vaccineContract, account } = this.state;
+    await vaccineContract.methods
+      .updatePerson(id, location, date)
+      .send({ from: account, gas: 5500000, gasPrice: '2000000000000' })
+      .once('receipt', (receipt) => {
+        console.log(`updated person: ${id} with ${location} ${date}`);
+      });
+  };
+
   render() {
     return (
       <div className="container">
         <form>
           <div>
-            <input
-              type="text"
-              id="name"
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
+            <input type="text" id="name" value={this.state.name} onChange={this.handleChange} />
           </div>
           <div>
-            <input
-              type="text"
-              id="id"
-              value={this.state.id}
-              onChange={this.handleChange}
-            />
+            <input type="text" id="id" value={this.state.id} onChange={this.handleChange} />
           </div>
           <button onClick={this.handleClick}>Create person</button>
         </form>
@@ -94,11 +93,13 @@ class App extends Component {
                 return (
                   <div>
                     <Person
+                      id={item.id}
                       name={item.name}
-                      id={item.personId}
+                      personId={item.personId}
                       date={item.vaccineDate}
                       location={item.vaccineLocation}
                       isVaccinated={item.vaccinated}
+                      updatePerson={this.updatePerson}
                     />
                     <Divider />
                   </div>

@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 contract Vaccine {
     uint public vaccinatedCount = 0;
+
     struct Person{
         uint id;
         string name;
@@ -13,12 +14,18 @@ contract Vaccine {
 
     mapping(uint => Person) public people;
 
-    constructor(string memory _name, string memory _personId) public {
-        createPerson(_name, _personId);
+    constructor() public {
+        createPerson("test", "123456789");
     }
 
     function createPerson(string memory _name, string memory _personId) public{
         vaccinatedCount++;
         people[vaccinatedCount] = Person(vaccinatedCount, _name, _personId, 0, "", false);
+    }
+
+    function updatePerson(uint _id, string memory _location, uint256 _date) public{
+        Person storage person = people[_id];
+        person.vaccineLocation = _location;
+        person.vaccineDate = _date;
     }
 }
