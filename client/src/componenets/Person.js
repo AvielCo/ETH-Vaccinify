@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
+import { Save } from '@material-ui/icons';
 
 class Person extends Component {
   constructor(props) {
@@ -11,10 +12,10 @@ class Person extends Component {
       location: props.location,
       isVaccinated: props.isVaccinated,
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
+    event.preventDefault();
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -24,7 +25,19 @@ class Person extends Component {
     this.setState({
       [name]: value,
     });
-  }
+  };
+
+  handleClick = (event) => {
+    event.preventDefault();
+    if (event.type === 'click') {
+      console.log(event.target.name);
+      if (event.name === 'accept') {
+        console.log('clicked accept');
+      } else if (event.name === 'cancel') {
+        console.log('clicked cancel');
+      }
+    }
+  };
 
   render() {
     return (
@@ -33,13 +46,7 @@ class Person extends Component {
         {this.state.isVaccinated ? (
           <div>
             <div>
-              <input
-                type="text"
-                value={this.state.location}
-                onChange={this.handleChange}
-                placeholder="Location"
-                name="location"
-              />
+              <input type="text" value={this.state.location} onChange={this.handleChange} placeholder="Location" name="location" />
             </div>
             <div>
               <TextField
@@ -53,25 +60,21 @@ class Person extends Component {
                 }}
               />
             </div>
+            <div>
+              <Button variant="contained" startIcon={<Save />} color="primary" onClick={this.handleClick} name="accept">
+                Accept
+              </Button>
+              <Button variant="contained" color="secondary" onClick={this.handleClick} name="cancel">
+                Cancel
+              </Button>
+              <label>This cannot be undone</label>
+            </div>
           </div>
         ) : (
           <div>
-            <input
-              type="checkbox"
-              onChange={this.handleChange}
-              checked={this.state.isVaccinated}
-              name="isVaccinated"
-            />
+            <input type="checkbox" onChange={this.handleChange} checked={this.state.isVaccinated} name="isVaccinated" />
           </div>
         )}
-        <div>
-          <button
-            onClick={() => {
-              console.log(this.state);
-            }}>
-            State check
-          </button>
-        </div>
       </div>
     );
   }
