@@ -11,6 +11,7 @@ class Person extends Component {
       personId: props.personId,
       date: props.date,
       location: props.location,
+      age: props.age,
       isVaccinated: props.isVaccinated,
       updatePerson: props.updatePerson,
       check: false,
@@ -114,7 +115,7 @@ class Person extends Component {
   render() {
     return (
       <div>
-        <label>{`${this.state.name} ${this.state.personId}`}</label>
+        <label>{`Name: ${this.state.name} ID: ${this.state.personId} Age: ${this.state.age}`}</label>
         <div>{this.renderPersonVaccineDetails()}</div>
       </div>
     );
