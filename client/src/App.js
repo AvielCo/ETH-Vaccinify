@@ -1,7 +1,9 @@
 import Web3 from 'web3';
 import React, { Component } from 'react';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
-import Person from './componenets/Person';
+import Person from './components/Person';
+import GetStats from './components/GetStats'
+import VaccineCheck from './components/VaccineCheck'
 import { Divider } from '@material-ui/core';
 import { validateID } from './Validators';
 
@@ -47,44 +49,8 @@ class App extends Component {
     });
   };
 
-  getID = async (id) => {
-    const {vaccineContract} = this.state;
-    let vaccinated = await vaccineContract.methods
-      .checkID(id)
-      .call();
-    console.log(vaccinated);
-  }
-
-  getStats = async () => {
-    const {vaccineContract} = this.state;
-      let stats = await vaccineContract.methods.getStats().call();
-      // (vaccinatedCount, avgVaccinatedAge, avgUnVaccinatedAge, totalRegistered)
-      return 
-      (<div>
-          <div>
-            <label>
-              Total registered: {stats[3]}
-              Vaccinated percentage: {stats[0]/stats[3]}
-              Vaccinated average age: {stats[1]}
-              Unvaccinated average age: {stats[2]}
-            </label>
-          </div>
-        </div>);
-  }
-
   handleClick = (event) => {
     event.preventDefault();
-    if (event.target.id === 'checkID'){
-      console.log(this.state.vaccID);
-      if (this.state.vaccID){
-         this.getID(this.state.vaccID);
-      }
-      return;
-    }
-    if (event.target.id == "showStats"){
-      this.getStats();
-      return;
-    }
     const { name, id, vaccineContract, account, age } = this.state;
     if (!name || !id || !age) {
       return;
@@ -128,17 +94,20 @@ class App extends Component {
     return (
       <div className="container">
         <form>
+          <div><label><u><b><i>Registration</i></b></u></label></div>
           <div>
-            <input type="text" id="name" value={this.state.name} onChange={this.handleChange} />
+            <input className="mb-1 mt-1" type="text" id="name" value={this.state.name} onChange={this.handleChange} placeholder="Name"/>
           </div>
           <div>
-            <input type="text" id="id" value={this.state.id} onChange={this.handleChange} />
+            <input className="mb-1 mt-1" type="text" id="id" value={this.state.id} onChange={this.handleChange} placeholder="ID" />
           </div>
           <div>
-            <input type="text" id="age" value={this.state.age} onChange={this.handleChange}/>
+            <input className="mb-1 mt-1" type="text" id="age" value={this.state.age} onChange={this.handleChange} placeholder="Age"/>
           </div>
-          <button onClick={this.handleClick}>Register Person</button>
+          <button className="mb-1 mt-1" onClick={this.handleClick}>Register Person</button>
         </form>
+        <GetStats contract={this.state.vaccineContract}/>
+        <div className="mb-1 mt-2" ><label><u><b><i>Registered people: </i></b></u></label></div>
         <div>
           {this.state.people.length > 0 && !this.state.loading ? (
             <div>
@@ -164,13 +133,7 @@ class App extends Component {
             <label>Loading data...</label>
           )}
         </div>
-        <div>
-          <input type="text" id="vaccCheck" value={this.state.vaccID} onChange={this.handleChange}/> 
-          <button onClick={this.handleClick} id="checkID">Check vaccine</button>
-        </div>
-        <div>
-          <button onClick={this.handleClick} id="showStats">Show statistics</button>
-        </div>
+        <VaccineCheck contract={this.state.vaccineContract}/>
       </div>
     );
   }
