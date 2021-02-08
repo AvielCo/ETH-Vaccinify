@@ -27,5 +27,6 @@ contract Vaccine {
         Person storage person = people[_id];
         person.vaccineLocation = _location;
         person.vaccineDate = _date;
+        person.vaccinated = true;
     }
 }

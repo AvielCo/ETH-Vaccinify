@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
 import Person from './componenets/Person';
 import { Divider } from '@material-ui/core';
+import { validateID } from './Validators';
 
 class App extends Component {
   constructor(props) {
@@ -13,16 +14,15 @@ class App extends Component {
       people: [],
       name: '',
       id: '',
+      loading: true,
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount() {
     this.loadBlockchainData();
   }
 
-  async loadBlockchainData() {
+  loadBlockchainData = async () => {
     const web3 = new Web3('http://127.0.0.1:7545' || Web3.givenProvider);
 
     const accounts = await web3.eth.getAccounts();
@@ -34,18 +34,26 @@ class App extends Component {
     const vaccinatedCount = await vaccineContract.methods.vaccinatedCount().call();
     this.setState({ vaccinatedCount });
 
+    const people = [];
     for (let i = 1; i <= vaccinatedCount; i++) {
       const person = await vaccineContract.methods.people(i).call();
-      this.setState({
-        people: [...this.state.people, person],
-      });
+      people.push(person);
     }
-    console.log(this.state.people);
-  }
+    this.setState({
+      people: people,
+      loading: false,
+    });
+  };
 
-  handleClick() {
+  handleClick = (event) => {
+    event.preventDefault();
     const { name, id, vaccineContract, account } = this.state;
     if (!name || !id) {
+      return;
+    }
+    const res = validateID(id);
+    if (!res.result) {
+      alert(res.cause);
       return;
     }
     vaccineContract.methods
@@ -54,15 +62,15 @@ class App extends Component {
       .once('receipt', (receipt) => {
         console.log(`created preson ${name} with id: ${id}`);
       });
-  }
+  };
 
-  handleChange(event) {
+  handleChange = (event) => {
     if (event.target.id === 'name') {
       this.setState({ name: event.target.value });
     } else if (event.target.id === 'id') {
       this.setState({ id: event.target.value });
     }
-  }
+  };
 
   updatePerson = async (id, location, date) => {
     const { vaccineContract, account } = this.state;
@@ -87,11 +95,11 @@ class App extends Component {
           <button onClick={this.handleClick}>Create person</button>
         </form>
         <div>
-          {this.state.people.length > 0 && (
+          {this.state.people.length > 0 && !this.state.loading ? (
             <div>
               {this.state.people.map((item, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <Person
                       id={item.id}
                       name={item.name}
@@ -106,6 +114,8 @@ class App extends Component {
                 );
               })}
             </div>
+          ) : (
+            <label>Loading data...</label>
           )}
         </div>
       </div>

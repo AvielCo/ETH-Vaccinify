@@ -62,7 +62,7 @@ class Person extends Component {
     }
   };
 
-  r = () => {
+  renderPersonVaccineDetails = () => {
     if (this.state.check && !this.state.isVaccinated) {
       return (
         <div>
@@ -94,8 +94,12 @@ class Person extends Component {
     } else if (this.state.isVaccinated) {
       return (
         <div>
-          <label>{this.state.location} </label>
-          <label>{new Date(this.state.date).toLocaleDateString(['he', 'il', 'he-IL'])}</label>
+          <div>
+            <label>Location: {this.state.location} </label>
+          </div>
+          <div>
+            <label>Date: {new Date(parseInt(this.state.date)).toLocaleDateString(['he', 'il', 'he-IL'])}</label>
+          </div>
         </div>
       );
     } else {
@@ -111,7 +115,7 @@ class Person extends Component {
     return (
       <div>
         <label>{`${this.state.name} ${this.state.personId}`}</label>
-        <div>{this.r()}</div>
+        <div>{this.renderPersonVaccineDetails()}</div>
       </div>
     );
   }
