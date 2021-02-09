@@ -1,11 +1,10 @@
 import Web3 from 'web3';
 import React, { Component } from 'react';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
-
-import GetStats from './components/GetStats'
-import AddPerson from './components/AddPerson'
-import VaccineCheck from './components/VaccineCheck'
-import PeopleList from './components/PeopleList'
+import GetStats from './components/GetStats';
+import AddPerson from './components/AddPerson';
+import VaccineCheck from './components/VaccineCheck';
+import PeopleList from './components/PeopleList';
 import { validateID } from './Validators';
 
 class App extends Component {
@@ -19,7 +18,7 @@ class App extends Component {
       id: '',
       age: '',
       loading: true,
-      vaccID: ""
+      vaccID: '',
     };
   }
 
@@ -50,21 +49,60 @@ class App extends Component {
     });
   };
 
+  createData = (people) => {
+    const peopleObjects = [];
+    const millisecondsToDate = (milliseconds) => {
+      return new Date(milliseconds).toLocaleDateString(['he', 'il', 'he-IL']);
+    };
+    people.forEach((person) => {
+      peopleObjects.push({
+        id: person.id,
+        personId: person.personId,
+        name: person.name,
+        age: person.age,
+        vaccineDetails: person.vaccinated
+          ? {
+              vaccinated: true,
+              location: person.vaccineLocation,
+              date: millisecondsToDate(person.vaccineDate),
+            }
+          : {
+              vaccinated: false,
+            },
+      });
+    });
+    return peopleObjects;
+  };
+
   render() {
     return (
-      <div className="container mt-3">
+      <div className="mt-5 mr-5 ml-5">
         <div className="row">
           <div className="col-sm">
-            <AddPerson contract={this.state.vaccineContract} account={this.state.account}/>
+            <AddPerson contract={this.state.vaccineContract} account={this.state.account} />
           </div>
           <div className="col-sm">
-            <VaccineCheck contract={this.state.vaccineContract}/>
+            <VaccineCheck contract={this.state.vaccineContract} />
           </div>
         </div>
-        <GetStats contract={this.state.vaccineContract}/>
-        <div className="mb-1 mt-2" ><label><u><b><i>Registered people: </i></b></u></label></div>
-        {!this.state.loading && <PeopleList people={this.state.people} contract={this.state.vaccineContract} account={this.state.account}/>}
-        
+        <GetStats contract={this.state.vaccineContract} />
+        <div className="mb-1 mt-2">
+          <label>
+            <u>
+              <b>
+                <i>Registered people: </i>
+              </b>
+            </u>
+          </label>
+        </div>
+        {!this.state.loading && (
+          <div>
+            <PeopleList people={this.createData(this.state.people)} contract={this.state.vaccineContract} account={this.state.account} />
+          </div>
+        )}
+        <div>
+          <label className="mt-5 mb-1"> © AviVit Technologies Inc </label>
+        </div>
       </div>
     );
   }

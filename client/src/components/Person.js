@@ -1,12 +1,12 @@
 import { TextField, Button } from '@material-ui/core';
 import { Save } from '@material-ui/icons';
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 
-function Person({id, personId, name, age, _isVaccinated, _date, _location, contract, account}) {
-  const [date, setDate] = useState(_date)
-  const [location, setLocation] = useState(_location)
-  const [isVaccinated, setIsVaccinated] = useState(_isVaccinated)
-  const [check, setCheck] = useState(false)
+function Person({ id, personId, name, age, _isVaccinated, _date, _location, contract, account }) {
+  const [date, setDate] = useState(_date);
+  const [location, setLocation] = useState(_location);
+  const [isVaccinated, setIsVaccinated] = useState(_isVaccinated);
+  const [check, setCheck] = useState(false);
 
   const updatePerson = async (id, location, date) => {
     await contract.methods
@@ -28,20 +28,20 @@ function Person({id, personId, name, age, _isVaccinated, _date, _location, contr
     }
     switch (name) {
       case 'check':
-          setCheck(value)
+        setCheck(value);
         break;
       case 'location':
-        setLocation(value)
+        setLocation(value);
         break;
       case 'date':
-        setDate(date)
-        break
+        setDate(date);
+        break;
       default:
         break;
     }
-  }
+  };
 
-  const handleClick = (event)=>{
+  const handleClick = (event) => {
     event.preventDefault();
     const target = event.target;
     if (event.type === 'click') {
@@ -49,20 +49,20 @@ function Person({id, personId, name, age, _isVaccinated, _date, _location, contr
         case 'accept':
           if (location && date !== 0) {
             updatePerson(id, location, date).then(() => {
-              setIsVaccinated(true)
+              setIsVaccinated(true);
             });
             return;
           }
           alert('No location or date');
           break;
         case 'cancel':
-          setCheck(false)
+          setCheck(false);
           break;
         default:
           break;
       }
     }
-  }
+  };
 
   const renderPersonVaccineDetails = () => {
     if (check && !isVaccinated) {
@@ -97,10 +97,14 @@ function Person({id, personId, name, age, _isVaccinated, _date, _location, contr
       return (
         <div>
           <div>
-            <label><b>Location:</b> {location} </label>
+            <label>
+              <b>Location:</b> {location}{' '}
+            </label>
           </div>
           <div>
-            <label><b>Date:</b> {new Date(parseInt(date)).toLocaleDateString(['he', 'il', 'he-IL'])}</label>
+            <label>
+              <b>Date:</b> {new Date(parseInt(date)).toLocaleDateString(['he', 'il', 'he-IL'])}
+            </label>
           </div>
         </div>
       );
@@ -116,11 +120,13 @@ function Person({id, personId, name, age, _isVaccinated, _date, _location, contr
   return (
     <div>
       <div>
-        <label><b>Name:</b> {name} <b>ID:</b> {personId} <b>Age:</b> {age}</label>
+        <label>
+          <b>Name:</b> {name} <b>ID:</b> {personId} <b>Age:</b> {age}
+        </label>
         <div>{renderPersonVaccineDetails()}</div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Person;

@@ -1,46 +1,56 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 
+function VaccineCheck({ contract }) {
+  const [id, setId] = useState('');
+  const [isVaccinated, setIsVaccinated] = useState(false);
+  const [show, setShow] = useState(false);
 
-function VaccineCheck({contract}) {
-    const [id, setId] = useState("")
-    const [isVaccinated, setIsVaccinated] = useState(false)
-    const [show, setShow] = useState(false)
+  const getID = async (id) => {
+    let vaccinated = await contract.methods.checkID(id).call();
+    return vaccinated;
+  };
 
-    const getID = async (id) => {
-        let vaccinated = await contract.methods
-            .checkID(id)
-            .call();
-        return vaccinated;
+  const handleClick = () => {
+    if (id.length <= 0) {
+      return;
     }
+    getID(id).then((res) => {
+      setIsVaccinated(res);
+      setShow(true);
+    });
+  };
 
-    const handleClick = () => {
-        if(id.length <= 0){
-            return
-        }
-        getID(id).then((res)=>{
-            setIsVaccinated(res);
-            setShow(true)
-        })
-    }
-
-    const handleChange = (event) => {
-        setShow(false)
-        setId(event.target.value)
-    }
+  const handleChange = (event) => {
+    setShow(false);
+    setId(event.target.value);
+  };
 
   return (
     <div className="pb-5">
       <div>
-          <div><label><b><u><i>Vaccination check</i></u></b></label></div>
-          <input type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange}/> 
-          <button onClick={handleClick} id="checkID">Check vaccine</button>
-        </div>
-        {show && (
         <div>
-            <label >Person with ID <b>{id}</b> is {isVaccinated ? "" : "not"} is vaccinated.</label>
-        </div>)}
+          <label>
+            <b>
+              <u>
+                <i>Vaccination check</i>
+              </u>
+            </b>
+          </label>
+        </div>
+        <input type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange} />
+        <button onClick={handleClick} id="checkID">
+          Check vaccine
+        </button>
+      </div>
+      {show && (
+        <div>
+          <label>
+            Person with ID <b>{id}</b> is {isVaccinated ? '' : 'not'} is vaccinated.
+          </label>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default VaccineCheck
+export default VaccineCheck;
