@@ -22,11 +22,11 @@ function GetStats({contract}) {
         </div>
         <div>
           {show && (<div>
-            <div><label><b>Statistics:</b></label></div>
-            <div><label>Total registered: {stats[3]}</label></div>
-            <div><label>Vaccinated percentage: {(stats[0]/stats[3])*100} %</label></div>
-            <div><label>Vaccinated average age: {stats[1]}</label></div>
-            <div><label>Unvaccinated average age: {stats[2]}</label></div>
+            <div><label className="mt-1 mb-1"><b><u>Statistics:</u></b></label></div>
+            <div><label><b>Total registered:</b> {stats[3]}</label></div>
+            <div><label><b>Vaccinated percentage:</b> {(stats[0]/stats[3])*100} %</label></div>
+            <div><label><b>Vaccinated average age:</b> {stats[1]}</label></div>
+            <div><label><b>Unvaccinated average age:</b> {stats[2]}</label></div>
           </div>)}
         </div>
     </div>

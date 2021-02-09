@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
 import { TextField, Button } from '@material-ui/core';
 import { Save } from '@material-ui/icons';
+import React, {useState} from 'react'
 
-class Person extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: props.id,
-      name: props.name,
-      personId: props.personId,
-      date: props.date,
-      location: props.location,
-      age: props.age,
-      isVaccinated: props.isVaccinated,
-      updatePerson: props.updatePerson,
-      check: false,
-    };
-    this.setState({
-      check: this.state.isVaccinated,
-    });
-  }
+function Person({id, personId, name, age, _isVaccinated, _date, _location, contract, account}) {
+  const [date, setDate] = useState(_date)
+  const [location, setLocation] = useState(_location)
+  const [isVaccinated, setIsVaccinated] = useState(_isVaccinated)
+  const [check, setCheck] = useState(false)
 
-  handleChange = (event) => {
+  const updatePerson = async (id, location, date) => {
+    await contract.methods
+      .updatePerson(id, location, date)
+      .send({ from: account, gas: 500000, gasPrice: '2000000000000' })
+      .once('receipt', (receipt) => {
+        console.log(`updated person: ${id} with ${location} ${date}`);
+      });
+  };
+
+  const handleChange = (event) => {
     event.preventDefault();
     const target = event.target;
     let value = target.type === 'checkbox' ? target.checked : target.value;
@@ -30,45 +26,50 @@ class Person extends Component {
       const date = new Date(value);
       value = date.getTime();
     }
-    this.setState({
-      [name]: value,
-    });
-  };
+    switch (name) {
+      case 'check':
+          setCheck(value)
+        break;
+      case 'location':
+        setLocation(value)
+        break;
+      case 'date':
+        setDate(date)
+        break
+      default:
+        break;
+    }
+  }
 
-  handleClick = (event) => {
+  const handleClick = (event)=>{
     event.preventDefault();
     const target = event.target;
     if (event.type === 'click') {
       switch (target.id) {
         case 'accept':
-          const { location, date, id } = this.state;
           if (location && date !== 0) {
-            this.state.updatePerson(id, location, date).then(() => {
-              this.setState({
-                isVaccinated: true,
-              });
+            updatePerson(id, location, date).then(() => {
+              setIsVaccinated(true)
             });
             return;
           }
           alert('No location or date');
           break;
         case 'cancel':
-          this.setState({
-            check: false,
-          });
+          setCheck(false)
           break;
         default:
           break;
       }
     }
-  };
+  }
 
-  renderPersonVaccineDetails = () => {
-    if (this.state.check && !this.state.isVaccinated) {
+  const renderPersonVaccineDetails = () => {
+    if (check && !isVaccinated) {
       return (
         <div>
           <div>
-            <input type="text" value={this.state.location} onChange={this.handleChange} placeholder="Location" name="location" />
+            <input type="text" value={location} onChange={handleChange} placeholder="Location" name="location" />
           </div>
           <div>
             <TextField
@@ -76,50 +77,50 @@ class Person extends Component {
               label="Date"
               type="date"
               defaultValue={new Date()}
-              onChange={this.handleChange}
+              onChange={handleChange}
               InputLabelProps={{
                 shrink: true,
               }}
             />
           </div>
           <div>
-            <button onClick={this.handleClick} id="accept">
+            <button onClick={handleClick} id="accept">
               Accept
             </button>
-            <button onClick={this.handleClick} id="cancel">
+            <button onClick={handleClick} id="cancel">
               Cancel
             </button>
           </div>
         </div>
       );
-    } else if (this.state.isVaccinated) {
+    } else if (isVaccinated) {
       return (
         <div>
           <div>
-            <label>Location: {this.state.location} </label>
+            <label><b>Location:</b> {location} </label>
           </div>
           <div>
-            <label>Date: {new Date(parseInt(this.state.date)).toLocaleDateString(['he', 'il', 'he-IL'])}</label>
+            <label><b>Date:</b> {new Date(parseInt(date)).toLocaleDateString(['he', 'il', 'he-IL'])}</label>
           </div>
         </div>
       );
     } else {
       return (
         <div>
-          <input type="checkbox" onChange={this.handleChange} checked={this.state.check} name="check" />
+          <input type="checkbox" onChange={handleChange} checked={check} name="check" />
         </div>
       );
     }
   };
 
-  render() {
-    return (
+  return (
+    <div>
       <div>
-        <label>{`Name: ${this.state.name} ID: ${this.state.personId} Age: ${this.state.age}`}</label>
-        <div>{this.renderPersonVaccineDetails()}</div>
+        <label><b>Name:</b> {name} <b>ID:</b> {personId} <b>Age:</b> {age}</label>
+        <div>{renderPersonVaccineDetails()}</div>
       </div>
-    );
-  }
+    </div>
+  )
 }
 
 export default Person;

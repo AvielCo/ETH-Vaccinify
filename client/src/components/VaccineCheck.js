@@ -29,14 +29,15 @@ function VaccineCheck({contract}) {
     }
 
   return (
-    <div>
+    <div className="pb-5">
       <div>
+          <div><label><b><u><i>Vaccination check</i></u></b></label></div>
           <input type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange}/> 
           <button onClick={handleClick} id="checkID">Check vaccine</button>
         </div>
         {show && (
         <div>
-            <label>Person with id: {id} is {isVaccinated ? "" : "not"} vaccinated</label>
+            <label >Person with ID <b>{id}</b> is {isVaccinated ? "" : "not"} is vaccinated.</label>
         </div>)}
     </div>
   )
