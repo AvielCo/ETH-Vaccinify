@@ -23,21 +23,29 @@ const StyledTableCell = withStyles((theme) => ({
     color: theme.palette.common.white,
   },
   body: {
-    fontSize: 14,
+    fontSize: 20,
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRowOutside = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#b3e5fc',
     },
+  },
+}))(TableRow); //FBF9FF
+
+const StyledTableRowInside = withStyles((theme) => ({
+  root: {
+    backgroundColor: '#e6ffff',
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+const StyledCollapse = withStyles((theme) => ({
+  container: {
+    backgroundColor: '#e6ffff',
+  },
+}))(Collapse);
 
 function Row({ row, account, contract }) {
   const classes = useRowStyle();
@@ -45,7 +53,6 @@ function Row({ row, account, contract }) {
   const [date, setDate] = useState(new Date().getTime());
   const [location, setLocation] = useState('');
   const [isGoodDate, setIsGoodDate] = useState(true);
-  const [value, setValue] = useState();
 
   const handleDateChange = (event) => {
     if (event instanceof Date && !isNaN(event) && event !== null) {
@@ -73,86 +80,84 @@ function Row({ row, account, contract }) {
 
   return (
     <React.Fragment>
-      <TableRow className={classes.root}>
-        <TableCell>
+      <StyledTableRowOutside className={classes.root}>
+        <StyledTableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
           {row.personId}
-        </TableCell>
-        <TableCell align="left">{row.name}</TableCell>
-        <TableCell align="left">{row.age}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Vaccine Details
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Location</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <InputBase
-                        className="pl-2 pr-2 rounded"
-                        onChange={(event) => {
-                          const value = event.target.value;
-                          setLocation(value);
-                        }}
-                        value={row.vaccineDetails.location}
+        </StyledTableCell>
+        <StyledTableCell align="left">{row.name}</StyledTableCell>
+        <StyledTableCell align="left">{row.age}</StyledTableCell>
+      </StyledTableRowOutside>
+      <StyledTableRowOutside>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#e6ffff' }} colSpan={6}>
+          <StyledCollapse in={open} timeout="auto" unmountOnExit>
+            <Typography variant="h6" gutterBottom component="div">
+              Vaccine Details
+            </Typography>
+            <Table size="small" aria-label="details">
+              <TableHead>
+                <StyledTableRowInside>
+                  <TableCell>Location</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell></TableCell>
+                </StyledTableRowInside>
+              </TableHead>
+              <TableBody>
+                <StyledTableRowInside>
+                  <StyledTableCell>
+                    <InputBase
+                      className="pl-2 pr-2 rounded"
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setLocation(value);
+                      }}
+                      value={row.vaccineDetails.location}
+                      disabled={row.vaccineDetails.vaccinated ? true : false}
+                      style={{ background: '#F0F2EF' }}
+                      inputProps={{ 'aria-label': 'naked' }}
+                    />
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        disableToolbar
                         disabled={row.vaccineDetails.vaccinated ? true : false}
-                        style={{ background: '#F0F2EF' }}
-                        inputProps={{ 'aria-label': 'naked' }}
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        id="date-picker-inline"
+                        value={new Date(parseInt(date))}
+                        minDate={new Date('2020-10-01')}
+                        onChange={handleDateChange}
+                        disableFuture={true}
+                        autoOk={true}
                       />
-                    </TableCell>
-                    <TableCell>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          disableToolbar
-                          disabled={row.vaccineDetails.vaccinated ? true : false}
-                          variant="inline"
-                          format="dd/MM/yyyy"
-                          id="date-picker-inline"
-                          value={new Date(parseInt(date))}
-                          minDate={new Date('2020-10-01')}
-                          onChange={handleDateChange}
-                          disableFuture={true}
-                          autoOk={true}
-                        />
-                      </MuiPickersUtilsProvider>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        disabled={!isGoodDate || location.length === 0}
-                        disableElevation
-                        variant="contained"
-                        onClick={() => {
-                          updatePerson().then(() => refresh());
-                        }}
-                        color="primary"
-                        size="small"
-                        className={classes.button}
-                        startIcon={<SaveIcon />}>
-                        Save
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
+                    </MuiPickersUtilsProvider>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <Button
+                      disabled={!isGoodDate || location.length === 0}
+                      disableElevation
+                      variant="contained"
+                      onClick={() => {
+                        updatePerson().then(() => refresh());
+                      }}
+                      color="primary"
+                      size="small"
+                      className={classes.button}
+                      startIcon={<SaveIcon />}>
+                      Save
+                    </Button>
+                  </StyledTableCell>
+                </StyledTableRowInside>
+              </TableBody>
+            </Table>
+          </StyledCollapse>
         </TableCell>
-      </TableRow>
+      </StyledTableRowOutside>
     </React.Fragment>
   );
 }
@@ -169,7 +174,7 @@ class PeopleList extends Component {
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
-            <TableRow>
+            <StyledTableRowOutside>
               <StyledTableCell />
               <StyledTableCell>
                 <b>ID</b>
@@ -180,7 +185,7 @@ class PeopleList extends Component {
               <StyledTableCell align="left">
                 <b>Age</b>
               </StyledTableCell>
-            </TableRow>
+            </StyledTableRowOutside>
           </TableHead>
           <TableBody>
             {this.state.people.map((row) => (

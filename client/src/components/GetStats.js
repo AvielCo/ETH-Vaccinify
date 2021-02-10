@@ -18,20 +18,13 @@ function GetStats({ contract }) {
   return (
     <div>
       <div>
-        <button onClick={handleClick} id="showStats">
+        <button className="mt-2" onClick={handleClick} id="showStats">
           Show statistics
         </button>
       </div>
       <div>
         {show && (
           <div>
-            <div>
-              <label className="mt-1 mb-1">
-                <b>
-                  <u>Statistics:</u>
-                </b>
-              </label>
-            </div>
             <div>
               <label>
                 <b>Total registered:</b> {stats[3]}

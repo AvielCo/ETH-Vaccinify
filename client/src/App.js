@@ -6,6 +6,7 @@ import AddPerson from './components/AddPerson';
 import VaccineCheck from './components/VaccineCheck';
 import PeopleList from './components/PeopleList';
 import { validateID } from './Validators';
+import './style.css';
 
 class App extends Component {
   constructor(props) {
@@ -79,21 +80,14 @@ class App extends Component {
       <div className="mt-5 mr-5 ml-5">
         <div className="row">
           <div className="col-sm">
-            <AddPerson contract={this.state.vaccineContract} account={this.state.account} />
-          </div>
-          <div className="col-sm">
             <VaccineCheck contract={this.state.vaccineContract} />
           </div>
+          <div className="col-sm">
+            <GetStats contract={this.state.vaccineContract} />
+          </div>
         </div>
-        <GetStats contract={this.state.vaccineContract} />
-        <div className="mb-1 mt-2">
-          <label>
-            <u>
-              <b>
-                <i>Registered people: </i>
-              </b>
-            </u>
-          </label>
+        <div>
+          <AddPerson contract={this.state.vaccineContract} account={this.state.account} />
         </div>
         {!this.state.loading && (
           <div>

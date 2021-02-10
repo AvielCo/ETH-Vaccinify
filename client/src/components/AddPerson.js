@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
 
 function AddPerson({ contract, account }) {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const addPerson = () => {
-    if (!name || !id || !age) {
-      return;
-    }
-    // const res = validateID(id);
-    // if (!res.result) {
-    // alert(res.cause);
-    //     return;
-    // }
     contract.methods
       .createPerson(name, id, parseInt(age))
       .send({ from: account, gas: 500000, gasPrice: '2000000000000' })
       .once('receipt', (receipt) => {
-        console.log(`created preson ${name} with id: ${id}`);
+        setDialogOpen(false);
+        refresh();
       });
   };
 
@@ -40,31 +35,34 @@ function AddPerson({ contract, account }) {
     }
   };
 
+  const handleDialogState = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+  const refresh = () => {
+    window.location.reload(false);
+  };
+
   return (
     <div>
-      <form>
-        <div>
-          <label>
-            <u>
-              <b>
-                <i>Registration</i>
-              </b>
-            </u>
-          </label>
-        </div>
-        <div>
-          <input className="mb-1 mt-1" type="text" id="name" value={name} onChange={handleChange} placeholder="Name" />
-        </div>
-        <div>
-          <input className="mb-1 mt-1" type="text" id="id" value={id} onChange={handleChange} placeholder="ID" />
-        </div>
-        <div>
-          <input className="mb-1 mt-1" type="text" id="age" value={age} onChange={handleChange} placeholder="Age" />
-        </div>
-        <button className="mb-1 mt-1" onClick={addPerson}>
-          Register Person
-        </button>
-      </form>
+      <Button onClick={handleDialogState}>Register</Button>
+      <Dialog open={dialogOpen} onClose={handleDialogState} aria-labelledby="form-dialog-title">
+        <DialogTitle>Register Person</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Register person you piece of flying shit</DialogContentText>
+          <TextField autoFocus margin="dense" id="name" label="Name" type="text" fullWidth onChange={handleChange} helperText="over 3 characters" />
+          <TextField margin="dense" id="id" label="ID" type="text" className="mr-4" onChange={handleChange} helperText="Israeli identification number" />
+          <TextField margin="dense" id="age" label="Age" type="number" onChange={handleChange} helperText="0-120" />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogState} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={addPerson} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
