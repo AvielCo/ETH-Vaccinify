@@ -12,6 +12,7 @@ function AddPerson({ contract, account }) {
       .createPerson(name, id, parseInt(age))
       .send({ from: account, gas: 500000, gasPrice: '2000000000000' })
       .once('receipt', (receipt) => {
+        console.log(receipt)
         setDialogOpen(false);
         refresh();
       });
