@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 
-function GetStats({ contract }) {
+function GetStats({ contract, account }) {
   const [stats, setStats] = useState({});
   const [show, setShow] = useState(false);
 
   const showStats = async () => {
-    let stats = await contract.methods.getStats().call();
-    return stats;
+    contract.methods.getStats().call({ from: account }, (error, res) => {
+      if (error) {
+        alert('You dont have permission!');
+      } else if (res !== undefined) {
+        setStats(res);
+        setShow(true);
+      }
+    });
   };
 
   const handleClick = (event) => {
-    showStats().then((res) => {
-      setStats(res);
-      setShow(true);
-    });
+    showStats();
   };
   return (
     <div>

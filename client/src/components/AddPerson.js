@@ -8,14 +8,15 @@ function AddPerson({ contract, account }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const addPerson = () => {
-    contract.methods
-      .createPerson(name, id, parseInt(age))
-      .send({ from: account, gas: 500000, gasPrice: '2000000000000' })
-      .once('receipt', (receipt) => {
-        console.log(receipt)
+    contract.methods.createPerson(name, id, parseInt(age)).send({ from: account, gas: 4712388, gasPrice: 100000000000 }, (error, res) => {
+      if (error) {
+        alert('You dont have permission!');
+        console.log(error);
+      } else if (res !== undefined) {
         setDialogOpen(false);
         refresh();
-      });
+      }
+    });
   };
 
   const handleChange = (event) => {

@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 contract Vaccine {
     uint public totalRegistered = 0;
+    address[] private permitted = [address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f), address(0x48e179d084516e00d1DD22f6b8508126f3e5BC84)];
 
     struct Person{
         uint id;
@@ -18,25 +19,33 @@ contract Vaccine {
     constructor() public {
     }
 
-    modifier onlyPermittedPersonal{
-        require(msg.sender == address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f) ||
-         msg.sender == address(0x48e179d084516e00d1DD22f6b8508126f3e5BC84));
+    function onlyPermittedPersonal(address sender) public pure returns(bool isPersonal){
+        if(sender != address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f) &&
+            sender != address(0x48e179d084516e00d1DD22f6b8508126f3e5BC84)){
+                return false;
+            }
+        return true;
+    }
+
+    modifier checkPersonalAddress(){
+        require(onlyPermittedPersonal(msg.sender), 'You dont have permission!!!');
         _;
     }
-//0x99c00fa555d7add214edeb7665cfe3a77e6346e23d895b87fd72f7268cd71a07
-    function createPerson(string memory _name, string memory _personId, uint age) public onlyPermittedPersonal {
+
+
+    function createPerson(string memory _name, string memory _personId, uint age) public checkPersonalAddress {
         totalRegistered++;
         people[totalRegistered] = Person(totalRegistered, _name, _personId, age, 0, "", false);
     }
 
-    function updatePerson(uint _id, string memory _location, uint256 _date) public onlyPermittedPersonal{
+    function updatePerson(uint _id, string memory _location, uint256 _date) public checkPersonalAddress{
         Person storage person = people[_id];
         person.vaccineLocation = _location;
         person.vaccineDate = _date;
         person.vaccinated = true;
     }
 
-    function checkID(string memory _personId) public onlyPermittedPersonal view returns(bool)  {
+    function checkID(string memory _personId) public checkPersonalAddress returns(bool)  {
         for (uint256 i = 1; i <= totalRegistered; i++){
             Person memory person = people[i];
             if (keccak256(abi.encodePacked(person.personId)) == keccak256(abi.encodePacked(_personId))){
@@ -45,7 +54,10 @@ contract Vaccine {
         }
     }
 
-    function getStats() public onlyPermittedPersonal view returns(uint, uint, uint, uint) {
+    function getStats() public checkPersonalAddress returns(uint, uint, uint, uint) {
+        if(totalRegistered == 0){
+            return (0, 0, 0, 0);
+        }
         uint256 vaccinatedCount = 0;
         uint totalUnVaccinatedAge = 0;
         uint totalVaccinatedAge = 0;

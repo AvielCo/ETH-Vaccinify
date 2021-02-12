@@ -31,7 +31,7 @@ const TablePaginationStyles = makeStyles(() => ({
   },
 }));
 
-function PeopleList({ people, contract, account }) {
+function PeopleList({ people, contract, account, isPermitted, loading }) {
   //Pagination system
   const classes = TablePaginationStyles();
   const [page, setPage] = useState(0);
@@ -62,32 +62,36 @@ function PeopleList({ people, contract, account }) {
             </StyledTableCell>
           </StyledTableRowOutside>
         </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0 ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : people).map((person) => (
-            <CustomTable key={person.id} row={person} account={account} contract={contract} />
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 15, 25, 50, 100, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={people.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                native: true,
-              }}
-              classes={{
-                root: classes.root,
-                menuItem: classes.menuItem,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
+        {isPermitted && !loading ? (
+          <React.Fragment>
+            <TableBody>
+              {(rowsPerPage > 0 ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : people).map((person) => (
+                <CustomTable key={person.id} row={person} account={account} contract={contract} />
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 15, 25, 50, 100, { label: 'All', value: -1 }]}
+                  colSpan={3}
+                  count={people.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    native: true,
+                  }}
+                  classes={{
+                    root: classes.root,
+                    menuItem: classes.menuItem,
+                  }}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </React.Fragment>
+        ) : null}
       </Table>
     </TableContainer>
   );

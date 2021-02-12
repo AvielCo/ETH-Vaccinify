@@ -9,12 +9,15 @@ function Person({ id, personId, name, age, _isVaccinated, _date, _location, cont
   const [check, setCheck] = useState(false);
 
   const updatePerson = async (id, location, date) => {
-    await contract.methods
-      .updatePerson(id, location, date)
-      .send({ from: account, gas: 500000, gasPrice: '2000000000000' })
-      .once('receipt', (receipt) => {
-        console.log(`updated person: ${id} with ${location} ${date}`);
-      });
+    contract.methods.updatePerson(id, location, date).send({ from: account, gas: 500000, gasPrice: '2000000000000' }, (error, res) => {
+      console.log(error, res);
+      if (error) {
+        console.log(error);
+        alert('You dont have permission');
+      } else if (res !== undefined) {
+        setIsVaccinated(true);
+      }
+    });
   };
 
   const handleChange = (event) => {

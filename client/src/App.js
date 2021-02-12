@@ -11,24 +11,59 @@ import './style.css';
 function App() {
   const [account, setAccount] = useState('');
   const [people, setPeople] = useState([]);
-  const [stnameate, setName] = useState('');
-  const [id, setId] = useState('');
-  const [age, setAge] = useState('');
   const [loading, setLoading] = useState(true);
-  const [vaccID, setVaccID] = useState('');
   const [vaccineContract, setVaccineContract] = useState();
-  const [eth, setEth] = useState();
   const [totalRegistered, setTotalRegistered] = useState(0);
+  const [provideEthAccess, setProvideEthAccess] = useState(false);
+  const [isPermitted, setIsPermitted] = useState(false);
+
+  const ethereum = window.ethereum;
+  window.addEventListener('load', async () => {
+    if (ethereum) {
+      window.web3 = new Web3(ethereum);
+      try {
+        // Request account access if needed
+        await ethereum.enable();
+        // Acccounts now exposed
+        setAccount(ethereum.selectedAddress);
+        setProvideEthAccess(true);
+        if (vaccineContract) {
+          vaccineContract.methods.onlyPermittedPersonal(ethereum.selectedAddress).call((error, res) => {
+            if (res) {
+              setIsPermitted(true);
+            } else {
+              setIsPermitted(false);
+            }
+          });
+        }
+        ethereum.on('accountsChanged', (accounts) => {
+          setAccount(accounts[0]);
+          if (vaccineContract) {
+            vaccineContract.methods.onlyPermittedPersonal(ethereum.selectedAddress).call((error, res) => {
+              if (res) {
+                setIsPermitted(true);
+              } else {
+                setIsPermitted(false);
+              }
+            });
+          }
+        });
+      } catch (error) {
+        alert('Non-Ethereum browser detected. You should consider trying MetaMask!.');
+        setProvideEthAccess(false);
+      }
+    } else if (window.web3) {
+      window.web3 = new Web3(Web3.currentProvider);
+      setProvideEthAccess(true);
+    }
+    // Non-dapp browsers...
+    else {
+      alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      setProvideEthAccess(false);
+    }
+  });
 
   const init = async () => {
-    const eth = window.ethereum;
-
-    if (!eth) {
-      alert('No ethereum found');
-    }
-
-    setEth(eth);
-
     const web3 = new Web3(Web3.currentProvider || 'http://127.0.0.1:7545');
 
     const _vaccineContract = new web3.eth.Contract(VACCINE_ABI, VACCINE_ADRS);
@@ -38,8 +73,11 @@ function App() {
     setTotalRegistered(_totalRegistered);
 
     for (let i = 1; i <= _totalRegistered; i++) {
-      const person = await _vaccineContract.methods.people(i).call();
-      people.push(person);
+      _vaccineContract.methods.people(i).call((error, res) => {
+        if (res) {
+          people.push(res);
+        }
+      });
     }
 
     setPeople(people);
@@ -48,30 +86,24 @@ function App() {
 
   useEffect(() => init(), []);
 
-  if (eth) {
-    eth.on('accountsChanged', (accounts) => setAccount(accounts[0]));
-  }
-
   return (
     <div className="mt-5 mr-5 ml-5">
-      {eth && (
+      {provideEthAccess && (
         <div>
           <div className="row">
             <div className="col-sm">
-              <VaccineCheck contract={vaccineContract} />
+              <VaccineCheck contract={vaccineContract} account={account} />
             </div>
             <div className="col-sm">
-              <GetStats contract={vaccineContract} />
+              <GetStats contract={vaccineContract} account={account} />
             </div>
           </div>
           <div>
             <AddPerson contract={vaccineContract} account={account} />
           </div>
-          {!loading && (
-            <div>
-              <PeopleList people={people} contract={vaccineContract} account={account} />
-            </div>
-          )}
+          <div>
+            <PeopleList people={people} contract={vaccineContract} account={account} isPermitted={isPermitted} loading={loading} />
+          </div>
           <div>
             <label className="mt-5 mb-1"> © AviVit Technologies Inc. </label>
           </div>

@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 
-function VaccineCheck({ contract }) {
+function VaccineCheck({ contract, account }) {
   const [id, setId] = useState('');
   const [isVaccinated, setIsVaccinated] = useState(false);
   const [show, setShow] = useState(false);
-
-  const getID = async (id) => {
-    let vaccinated = await contract.methods.checkID(id).call();
-    return vaccinated;
-  };
+  const [transactionSuccses, setTransactionSuccses] = useState(false);
 
   const handleClick = () => {
     if (id.length <= 0) {
       return;
     }
-    getID(id).then((res) => {
-      setIsVaccinated(res);
-      setShow(true);
+    contract.methods.checkID(id).call({ from: account }, (error, res) => {
+      if (error) {
+        alert('You dont have permission!');
+      } else if (res !== undefined) {
+        setIsVaccinated(res);
+        setShow(true);
+      }
     });
   };
 
