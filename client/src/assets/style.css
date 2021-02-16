@@ -1,0 +1,68 @@
+:root {
+  --table-primary-color: #484848;
+  --bg-primary-color: #82b3c9;
+}
+/* body */
+
+body {
+  background: var(--bg-primary-color);
+}
+
+/* paragraph */
+
+p {
+  text-align: center;
+}
+
+/* div */
+
+div.align-row {
+  justify-content: center;
+  flex-direction: row;
+}
+
+div.align-col {
+  align-content: center;
+  flex-direction: column;
+}
+
+div.align-flex {
+  justify-content: center;
+  display: flex;
+  width: 50%;
+}
+
+div.table {
+  background: var(--table-primary-color);
+}
+
+/* label */
+label.credits {
+  color: gray;
+}
+
+/* Material UI */
+.MuiIconButton-root {
+  color: white;
+}
+
+.MuiIconButton-root.Mui-disabled {
+  color: var(--table-primary-color);
+}
+
+.MuiButton-root.register {
+  color: white;
+}
+
+.MuiButton-root.Mui-disabled.register {
+  color: var(--table-primary-color);
+}
+
+/* media query */
+
+@media (max-width: 700px) {
+  div.align-row {
+    align-content: center;
+    flex-direction: column;
+  }
+}

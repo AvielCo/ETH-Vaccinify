@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
 
-function AddPerson({ contract, account }) {
+function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const addPerson = () => {
-    contract.methods.createPerson(name, id, parseInt(age)).send({ from: account, gas: 4712388, gasPrice: 100000000000 }, (error, res) => {
-      if (error) {
-        alert('You dont have permission!');
-        console.log(error);
-      } else if (res !== undefined) {
-        setDialogOpen(false);
-        refresh();
-      }
-    });
+    contract.methods
+      .createPerson(name, id, parseInt(age))
+      .send({ from: account })
+      .then((res) => {
+        setSnackBar(`Successfully added person ${(name, id)}.\nRefresh the page to see the changes.`, 'success');
+      })
+      .catch((err) => {
+        setSnackBar(err, 'error');
+      });
   };
 
   const handleChange = (event) => {
@@ -46,8 +46,10 @@ function AddPerson({ contract, account }) {
   };
 
   return (
-    <div>
-      <Button onClick={handleDialogState}>Register</Button>
+    <div className="table" style={{ background: '#484848', position: 'absolute' }}>
+      <Button className="register" onClick={handleDialogState} color="secondary" disabled={!isPermitted}>
+        Register
+      </Button>
       <Dialog open={dialogOpen} onClose={handleDialogState} aria-labelledby="form-dialog-title">
         <DialogTitle>Register Person</DialogTitle>
         <DialogContent>

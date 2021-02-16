@@ -1,30 +1,32 @@
 pragma solidity ^0.5.0;
 
 contract Vaccine {
-    uint public totalRegistered = 0;
-    address[] private permitted = [address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f), address(0x48e179d084516e00d1DD22f6b8508126f3e5BC84)];
-
+    address[] private permitted = new address[](100);
+    string[] ids;
+    
     struct Person{
-        uint id;
         string name;
-        string personId;
-        uint256 age;
+        uint age;
         uint256 vaccineDate;
         string vaccineLocation;
         bool vaccinated;
     }
 
-    mapping(uint => Person) public people;
+    mapping(string => Person) public people;
 
     constructor() public {
+        permitted = [address(0x603a75B479a4b39F5851b75C77844D0841529FED),
+            address(0xf0e8e976Dfc43e3d01aEddc75f155f1Bc83D5fF7), address(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4),
+            address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f)];
     }
 
-    function onlyPermittedPersonal(address sender) public pure returns(bool isPersonal){
-        if(sender != address(0x1E93aa466Be01642d2Bd89E4198D1cFa2ADd104f) &&
-            sender != address(0x48e179d084516e00d1DD22f6b8508126f3e5BC84)){
-                return false;
+    function onlyPermittedPersonal(address sender) public view returns(bool isPersonal){
+        for(uint i; i < permitted.length; i++){
+            if(sender == permitted[i]){
+                return true;
             }
-        return true;
+        }
+        return false;
     }
 
     modifier checkPersonalAddress(){
@@ -32,52 +34,67 @@ contract Vaccine {
         _;
     }
 
-
-    function createPerson(string memory _name, string memory _personId, uint age) public checkPersonalAddress {
-        totalRegistered++;
-        people[totalRegistered] = Person(totalRegistered, _name, _personId, age, 0, "", false);
-    }
-
-    function updatePerson(uint _id, string memory _location, uint256 _date) public checkPersonalAddress{
-        Person storage person = people[_id];
-        person.vaccineLocation = _location;
-        person.vaccineDate = _date;
-        person.vaccinated = true;
-    }
-
-    function checkID(string memory _personId) public checkPersonalAddress returns(bool)  {
-        for (uint256 i = 1; i <= totalRegistered; i++){
-            Person memory person = people[i];
-            if (keccak256(abi.encodePacked(person.personId)) == keccak256(abi.encodePacked(_personId))){
-                return person.vaccinated;
+    function checkIfIDExists(string memory id) private view returns(bool isExists, uint index) {
+        for(uint i = 0; i < ids.length; i++){
+            if(keccak256(abi.encodePacked(ids[i])) == keccak256(abi.encodePacked(id))){
+                return (true, i);
             }
         }
+        return (false, 0);
     }
 
-    function getStats() public checkPersonalAddress returns(uint, uint, uint, uint) {
-        if(totalRegistered == 0){
+    function registerPerson(string memory _id, string memory _name, uint _age) public checkPersonalAddress returns(bool) {
+        ids.push(_id);
+        people[_id] = Person(_name, _age, 0, "", false);
+    }
+    
+    function removePerson(string memory _id) public checkPersonalAddress {
+        (bool isExists, uint index) = checkIfIDExists(_id);
+        if(!isExists){
+            revert("Invalid ID.");
+        }
+        ids[index] = ids[ids.length - 1];
+        ids.pop();
+        delete(people[_id]);
+    }
+
+    function checkIfVaccinated(string memory _id) public view checkPersonalAddress returns(bool isVaccinated)  {
+        (bool isExists, uint index) = checkIfIDExists(_id);
+        if(!isExists){
+            revert("Invalid ID.");
+        }
+        return people[_id].vaccinated;
+    }
+    
+    
+    function vaccinatePerson(string memory _id, string memory _location, uint256 _date) public checkPersonalAddress{
+        if(checkIfVaccinated(_id)){
+           revert('Person already vaccinated.'); 
+        }
+        people[_id].vaccineLocation = _location;
+        people[_id].vaccineDate = _date;
+        people[_id].vaccinated = true;
+    }
+
+    function getStats() public view checkPersonalAddress returns(uint, uint, uint, uint) {
+        if(ids.length == 0){
             return (0, 0, 0, 0);
         }
-        uint256 vaccinatedCount = 0;
+        
+        uint vaccinatedCount = 0;
         uint totalUnVaccinatedAge = 0;
         uint totalVaccinatedAge = 0;
-        uint avgVaccinatedAge = 0;
-        uint avgUnVaccinatedAge = 0;
-        for (uint256 i = 1; i <= totalRegistered; i++){
-            Person memory person = people[i];
+        
+        for (uint i = 0; i < ids.length; i++){
+            Person storage person = people[ids[i]];
             if (person.vaccinated == true) {
                 vaccinatedCount++;
-                totalVaccinatedAge += person.age;
+                totalVaccinatedAge = totalVaccinatedAge + person.age;
             }
             else{
-                totalUnVaccinatedAge += person.age;
+                totalUnVaccinatedAge = totalUnVaccinatedAge + person.age;
             }
         }
-        avgVaccinatedAge = totalVaccinatedAge / vaccinatedCount;
-        if(totalRegistered - vaccinatedCount == 0){
-            return (vaccinatedCount, avgVaccinatedAge, 0, totalRegistered);
-        }
-        avgUnVaccinatedAge = totalUnVaccinatedAge / (totalRegistered - vaccinatedCount);
-        return (vaccinatedCount, avgVaccinatedAge, avgUnVaccinatedAge, totalRegistered);
+        return (vaccinatedCount, totalVaccinatedAge, totalUnVaccinatedAge, ids.length);
     }
 }

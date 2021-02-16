@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Table, TableBody, makeStyles, TableRow, TableCell, TableFooter, TableContainer, TablePagination, TableHead, Paper, withStyles } from '@material-ui/core';
 import TablePaginationActions from './TablePaginationActions';
 import CustomTable from './CustomTable';
+import AddPerson from './AddPerson';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: '#484848',
@@ -22,16 +24,14 @@ const StyledTableRowOutside = withStyles((theme) => ({
 
 const TablePaginationStyles = makeStyles(() => ({
   root: {
-    backgroundColor: '#484848',
     color: '#FFFFFF',
   },
   menuItem: {
-    backgroundColor: '#484848',
     color: '#000000',
   },
 }));
 
-function PeopleList({ people, contract, account, isPermitted, loading }) {
+function PeopleList({ people, contract, account, isPermitted, loading, setRegisteredPerson, setSnackBar }) {
   //Pagination system
   const classes = TablePaginationStyles();
   const [page, setPage] = useState(0);
@@ -46,12 +46,12 @@ function PeopleList({ people, contract, account, isPermitted, loading }) {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table size="small">
+    <TableContainer component={Paper} style={{ maxWidth: '70%', margin: '0 auto', borderRadius: '20px' }}>
+      <Table size="small" stickyHeader>
         <TableHead>
           <StyledTableRowOutside>
             <StyledTableCell />
-            <StyledTableCell>
+            <StyledTableCell align="center">
               <b>ID</b>
             </StyledTableCell>
             <StyledTableCell align="left">
@@ -62,18 +62,18 @@ function PeopleList({ people, contract, account, isPermitted, loading }) {
             </StyledTableCell>
           </StyledTableRowOutside>
         </TableHead>
-        {isPermitted && !loading ? (
+        {!loading ? (
           <React.Fragment>
             <TableBody>
               {(rowsPerPage > 0 ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : people).map((person) => (
-                <CustomTable key={person.id} row={person} account={account} contract={contract} />
+                <CustomTable key={person.id} row={person} account={account} contract={contract} setSnackBar={setSnackBar} />
               ))}
             </TableBody>
             <TableFooter>
-              <TableRow>
+              <TableRow style={{ background: '#484848', overflowX: 'hidden' }}>
+                <AddPerson contract={contract} account={account} registerPerson={setRegisteredPerson} isPermitted={isPermitted} setSnackBar={setSnackBar} />
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 15, 25, 50, 100, { label: 'All', value: -1 }]}
-                  colSpan={3}
+                  rowsPerPageOptions={[5, 10, 15, 25, { label: 'All', value: -1 }]}
                   count={people.length}
                   rowsPerPage={rowsPerPage}
                   page={page}

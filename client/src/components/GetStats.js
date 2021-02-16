@@ -1,6 +1,7 @@
+import { Button } from '@material-ui/core';
 import React, { useState } from 'react';
 
-function GetStats({ contract, account }) {
+function GetStats({ contract, account, isPermitted }) {
   const [stats, setStats] = useState({});
   const [show, setShow] = useState(false);
 
@@ -21,9 +22,9 @@ function GetStats({ contract, account }) {
   return (
     <div>
       <div>
-        <button className="mt-2" onClick={handleClick} id="showStats">
+        <Button className="mt-2" onClick={handleClick} id="showStats" disabled={!isPermitted}>
           Show statistics
-        </button>
+        </Button>
       </div>
       <div>
         {show && (

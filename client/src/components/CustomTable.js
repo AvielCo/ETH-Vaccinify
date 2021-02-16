@@ -5,6 +5,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import SaveIcon from '@material-ui/icons/Save';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useRowStyle = makeStyles((theme) => ({
   root: {
@@ -47,7 +49,7 @@ const StyledCollapse = withStyles((theme) => ({
   },
 }))(Collapse);
 
-function CustomTable({ row, account, contract }) {
+function CustomTable({ row, account, contract, setSnackBar }) {
   const classes = useRowStyle();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(row.vaccinated ? row.vaccineDate : new Date().getTime());
@@ -71,29 +73,65 @@ function CustomTable({ row, account, contract }) {
   };
 
   const updatePerson = async () => {
-    await contract.methods.updatePerson(row.id, location, date).send({ from: account, gas: 500000, gasPrice: '2000000000000' });
+    await contract.methods
+      .updatePerson(row.id, location, date)
+      .send({ from: account })
+      .then((res) => {
+        setSnackBar(`Successfully updated person ${(row.name, row.personId)}.`, 'success');
+      })
+      .catch((err) => {
+        setSnackBar(err, 'error');
+      });
+  };
+
+  const removePerson = async () => {
+    await contract.methods
+      .removePerson(row.id)
+      .send({ from: account })
+      .then((res) => {
+        setSnackBar(`Successfully removed person ${(row.name, row.personId)}.`, 'success');
+      })
+      .catch((err) => {
+        setSnackBar(err, 'error');
+      });
   };
 
   const refresh = () => {
     window.location.reload(false);
   };
 
+  const showSnackBar = () => {
+    const severity = '';
+    const massage = '';
+    return (
+      <Snackbar autoHideDuration={6000}>
+        <MuiAlert elevation={6} variant="filled" severity={severity}>
+          {massage}
+        </MuiAlert>
+      </Snackbar>
+    );
+  };
+
   return (
     <React.Fragment>
       <StyledTableRowOutside className={classes.root}>
-        <StyledTableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+        <StyledTableCell padding="checkbox">
+          <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell component="th" scope="row">
+        <StyledTableCell style={{ width: '25%' }} scope="row" component="th" padding="checkbox" align="center">
           {row.personId}
         </StyledTableCell>
-        <StyledTableCell align="left">{row.name}</StyledTableCell>
-        <StyledTableCell align="left">{row.age}</StyledTableCell>
+        <StyledTableCell style={{ width: '50%' }} padding="checkbox" align="left">
+          {row.name}
+        </StyledTableCell>
+        <StyledTableCell style={{ width: '25%' }} padding="checkbox" align="left">
+          {row.age}
+        </StyledTableCell>
       </StyledTableRowOutside>
       <StyledTableRowOutside>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#e6ffff' }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 70, backgroundColor: '#e6ffff' }} colSpan={4}>
           <StyledCollapse in={open} timeout="auto" unmountOnExit>
             <Typography variant="h6" gutterBottom component="div">
               Vaccine Details
@@ -101,14 +139,18 @@ function CustomTable({ row, account, contract }) {
             <Table size="small" aria-label="details">
               <TableHead>
                 <StyledTableRowInside>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Date</TableCell>
+                  <TableCell scope="row">
+                    <b>Location</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Date</b>
+                  </TableCell>
                   <TableCell></TableCell>
                 </StyledTableRowInside>
               </TableHead>
               <TableBody>
                 <StyledTableRowInside>
-                  <StyledTableCell>
+                  <StyledTableCell scope="row" component="th">
                     <InputBase
                       className="pl-2 pr-2 rounded"
                       onChange={(event) => setLocation(event.target.value)}
@@ -139,9 +181,7 @@ function CustomTable({ row, account, contract }) {
                       disabled={!isGoodDate || location.length === 0}
                       disableElevation
                       variant="contained"
-                      onClick={() => {
-                        updatePerson().then(() => refresh());
-                      }}
+                      onClick={() => updatePerson()}
                       color="primary"
                       size="small"
                       className={classes.button}

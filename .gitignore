@@ -1,2 +1,24 @@
 node_modules/
 helpful tips/
+.firebase/hosting.cHVibGlj.cache
+.firebase/hosting.Y2xpZW50XGJ1aWxk.cache
+.github/workflows/firebase-hosting-merge.yml
+.github/workflows/firebase-hosting-pull-request.yml
+public/asset-manifest.json
+public/favicon.ico
+public/index.html
+public/logo192.png
+public/logo512.png
+public/manifest.json
+public/robots.txt
+public/static/css/main.82de2602.chunk.css
+public/static/css/main.82de2602.chunk.css.map
+public/static/js/2.87ee1eb8.chunk.js
+public/static/js/2.87ee1eb8.chunk.js.LICENSE.txt
+public/static/js/2.87ee1eb8.chunk.js.map
+public/static/js/main.e6b642a3.chunk.js
+public/static/js/main.e6b642a3.chunk.js.map
+public/static/js/runtime-main.c012fedc.js
+public/static/js/runtime-main.c012fedc.js.map
+.firebaserc
+firebase.json

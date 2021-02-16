@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-
-function VaccineCheck({ contract, account }) {
+import { Button } from '@material-ui/core';
+function VaccineCheck({ contract, account, isPermitted }) {
   const [id, setId] = useState('');
   const [isVaccinated, setIsVaccinated] = useState(false);
   const [show, setShow] = useState(false);
@@ -38,9 +38,9 @@ function VaccineCheck({ contract, account }) {
           </label>
         </div>
         <input type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange} />
-        <button className="ml-2" onClick={handleClick} id="checkID">
+        <Button className="ml-2" onClick={handleClick} id="checkID" disabled={!isPermitted}>
           Check vaccine
-        </button>
+        </Button>
       </div>
       {show && (
         <div>
