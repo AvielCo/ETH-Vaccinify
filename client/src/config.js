@@ -18,11 +18,11 @@ export const VACCINE_ABI = [
     inputs: [
       {
         internalType: 'string',
-        name: '_personId',
+        name: '_id',
         type: 'string',
       },
     ],
-    name: 'checkID',
+    name: 'checkIfVaccinated',
     outputs: [
       {
         internalType: 'bool',
@@ -35,64 +35,95 @@ export const VACCINE_ABI = [
     type: 'function',
   },
   {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_personId',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'age',
-        type: 'uint256',
-      },
-    ],
-    name: 'createPerson',
+    constant: true,
+    inputs: [],
+    name: 'getIds',
     outputs: [
       {
-        internalType: 'bool',
-        name: 'isNotExists',
-        type: 'bool',
+        internalType: 'string[]',
+        name: '',
+        type: 'string[]',
       },
     ],
     payable: false,
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
   },
   {
-    constant: false,
+    constant: true,
+    inputs: [],
+    name: 'getPeople',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'string',
+            name: 'id',
+            type: 'string',
+          },
+          {
+            internalType: 'string',
+            name: 'name',
+            type: 'string',
+          },
+          {
+            internalType: 'uint256',
+            name: 'age',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'vaccineDate',
+            type: 'uint256',
+          },
+          {
+            internalType: 'string',
+            name: 'vaccineLocation',
+            type: 'string',
+          },
+          {
+            internalType: 'bool',
+            name: 'vaccinated',
+            type: 'bool',
+          },
+        ],
+        internalType: 'struct Vaccine.Person[]',
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
     inputs: [],
     name: 'getStats',
     outputs: [
       {
         internalType: 'uint256',
-        name: 'vaccinatedCount',
+        name: '',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'avgVaccinatedAge',
+        name: '',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'avgUnVaccinatedAge',
+        name: '',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: 'totalRegistered',
+        name: '',
         type: 'uint256',
       },
     ],
     payable: false,
-    stateMutability: 'nonpayable',
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -120,26 +151,21 @@ export const VACCINE_ABI = [
     constant: true,
     inputs: [
       {
-        internalType: 'uint256',
+        internalType: 'string',
         name: '',
-        type: 'uint256',
+        type: 'string',
       },
     ],
     name: 'people',
     outputs: [
       {
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
-      },
-      {
         internalType: 'string',
-        name: 'name',
+        name: 'id',
         type: 'string',
       },
       {
         internalType: 'string',
-        name: 'personId',
+        name: 'name',
         type: 'string',
       },
       {
@@ -168,27 +194,58 @@ export const VACCINE_ABI = [
     type: 'function',
   },
   {
-    constant: true,
-    inputs: [],
-    name: 'totalRegistered',
-    outputs: [
+    constant: false,
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_id',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_name',
+        type: 'string',
+      },
       {
         internalType: 'uint256',
-        name: '',
+        name: '_age',
         type: 'uint256',
       },
     ],
+    name: 'registerPerson',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     payable: false,
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     constant: false,
     inputs: [
       {
-        internalType: 'uint256',
+        internalType: 'string',
         name: '_id',
-        type: 'uint256',
+        type: 'string',
+      },
+    ],
+    name: 'removePerson',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_id',
+        type: 'string',
       },
       {
         internalType: 'string',
@@ -201,18 +258,12 @@ export const VACCINE_ABI = [
         type: 'uint256',
       },
     ],
-    name: 'updatePerson',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: 'isVaccinated',
-        type: 'bool',
-      },
-    ],
+    name: 'vaccinatePerson',
+    outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
   },
 ];
 
-export const VACCINE_ADRS = '0xce3dc7E9011689f908E15d02A805223C68C8ed6B';
+export const VACCINE_ADRS = '0x3437C754e1aC2AB7625c7d895C26a4B9f7950bf4';

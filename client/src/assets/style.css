@@ -14,6 +14,15 @@ p {
   text-align: center;
 }
 
+/* text */
+h5.table-head {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 100;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 2px black;
+}
+
 /* div */
 
 div.align-row {
@@ -32,7 +41,7 @@ div.align-flex {
   width: 50%;
 }
 
-div.table {
+div.table-button {
   background: var(--table-primary-color);
 }
 

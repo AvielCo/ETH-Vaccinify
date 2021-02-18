@@ -5,8 +5,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import SaveIcon from '@material-ui/icons/Save';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useRowStyle = makeStyles((theme) => ({
   root: {
@@ -49,7 +48,7 @@ const StyledCollapse = withStyles((theme) => ({
   },
 }))(Collapse);
 
-function CustomTable({ row, account, contract, setSnackBar }) {
+function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
   const classes = useRowStyle();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(row.vaccinated ? row.vaccineDate : new Date().getTime());
@@ -57,6 +56,9 @@ function CustomTable({ row, account, contract, setSnackBar }) {
   const [isGoodDate, setIsGoodDate] = useState(true);
 
   const handleDateChange = (event) => {
+    if (!isPermitted) {
+      return;
+    }
     if (event instanceof Date && !isNaN(event) && event !== null) {
       const t = event.getTime();
       const today = new Date().getTime();
@@ -72,44 +74,41 @@ function CustomTable({ row, account, contract, setSnackBar }) {
     }
   };
 
-  const updatePerson = async () => {
-    await contract.methods
-      .updatePerson(row.id, location, date)
+  const updatePerson = () => {
+    if (!isPermitted) {
+      return;
+    }
+    setSnackBar('Sending request... please wait.', 'info');
+    contract.methods
+      .vaccinatePerson(row.id, location, date)
       .send({ from: account })
       .then((res) => {
-        setSnackBar(`Successfully updated person ${(row.name, row.personId)}.`, 'success');
+        setSnackBar(`Successfully updated person ${(row.name, row.id)}.`, 'success');
       })
       .catch((err) => {
-        setSnackBar(err, 'error');
+        setSnackBar('An error has been occured when trying to update person details.', 'error');
       });
   };
 
   const removePerson = async () => {
-    await contract.methods
+    if (!isPermitted) {
+      return;
+    }
+
+    setSnackBar('Sending request... please wait.', 'info');
+    contract.methods
       .removePerson(row.id)
       .send({ from: account })
       .then((res) => {
-        setSnackBar(`Successfully removed person ${(row.name, row.personId)}.`, 'success');
+        setSnackBar(`Successfully removed person ${(row.name, row.id)}.`, 'success');
       })
       .catch((err) => {
-        setSnackBar(err, 'error');
+        setSnackBar('An error has been occured when trying to remove a person.', 'error');
       });
   };
 
   const refresh = () => {
     window.location.reload(false);
-  };
-
-  const showSnackBar = () => {
-    const severity = '';
-    const massage = '';
-    return (
-      <Snackbar autoHideDuration={6000}>
-        <MuiAlert elevation={6} variant="filled" severity={severity}>
-          {massage}
-        </MuiAlert>
-      </Snackbar>
-    );
   };
 
   return (
@@ -120,14 +119,19 @@ function CustomTable({ row, account, contract, setSnackBar }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell style={{ width: '25%' }} scope="row" component="th" padding="checkbox" align="center">
-          {row.personId}
+        <StyledTableCell style={{ width: '16%' }} scope="row" component="th" padding="checkbox" align="center">
+          {row.id}
         </StyledTableCell>
         <StyledTableCell style={{ width: '50%' }} padding="checkbox" align="left">
           {row.name}
         </StyledTableCell>
-        <StyledTableCell style={{ width: '25%' }} padding="checkbox" align="left">
+        <StyledTableCell style={{ width: '16%' }} padding="checkbox" align="left">
           {row.age}
+        </StyledTableCell>
+        <StyledTableCell style={{ width: '16%' }} padding="checkbox" align="left">
+          <IconButton size="small" onClick={() => removePerson()} hidden={!isPermitted}>
+            <DeleteForeverIcon />
+          </IconButton>
         </StyledTableCell>
       </StyledTableRowOutside>
       <StyledTableRowOutside>
@@ -153,9 +157,9 @@ function CustomTable({ row, account, contract, setSnackBar }) {
                   <StyledTableCell scope="row" component="th">
                     <InputBase
                       className="pl-2 pr-2 rounded"
-                      onChange={(event) => setLocation(event.target.value)}
+                      onChange={(event) => isPermitted && setLocation(event.target.value)}
                       value={location}
-                      disabled={row.vaccinated ? true : false}
+                      disabled={row.vaccinated || !isPermitted ? true : false}
                       style={{ background: '#F0F2EF' }}
                       inputProps={{ 'aria-label': 'naked' }}
                     />
@@ -164,7 +168,7 @@ function CustomTable({ row, account, contract, setSnackBar }) {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         disableToolbar
-                        disabled={row.vaccinated ? true : false}
+                        disabled={row.vaccinated && !isPermitted ? true : false}
                         variant="inline"
                         format="dd/MM/yyyy"
                         id="date-picker-inline"
@@ -178,6 +182,7 @@ function CustomTable({ row, account, contract, setSnackBar }) {
                   </StyledTableCell>
                   <StyledTableCell>
                     <Button
+                      hidden={!isPermitted}
                       disabled={!isGoodDate || location.length === 0}
                       disableElevation
                       variant="contained"

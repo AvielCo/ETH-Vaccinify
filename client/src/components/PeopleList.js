@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Table, TableBody, makeStyles, TableRow, TableCell, TableFooter, TableContainer, TablePagination, TableHead, Paper, withStyles } from '@material-ui/core';
+import { Table, TableBody, makeStyles, TableRow, TableCell, TableFooter, TableContainer, TablePagination, TableHead, Paper, withStyles, Typography } from '@material-ui/core';
 import TablePaginationActions from './TablePaginationActions';
 import CustomTable from './CustomTable';
 import AddPerson from './AddPerson';
-
+import VaccineCheck from './VaccineCheck';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: '#484848',
@@ -46,54 +46,60 @@ function PeopleList({ people, contract, account, isPermitted, loading, setRegist
   };
 
   return (
-    <TableContainer component={Paper} style={{ maxWidth: '70%', margin: '0 auto', borderRadius: '20px' }}>
-      <Table size="small" stickyHeader>
-        <TableHead>
-          <StyledTableRowOutside>
-            <StyledTableCell />
-            <StyledTableCell align="center">
-              <b>ID</b>
-            </StyledTableCell>
-            <StyledTableCell align="left">
-              <b>Name</b>
-            </StyledTableCell>
-            <StyledTableCell align="left">
-              <b>Age</b>
-            </StyledTableCell>
-          </StyledTableRowOutside>
-        </TableHead>
-        {!loading ? (
-          <React.Fragment>
-            <TableBody>
-              {(rowsPerPage > 0 ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : people).map((person) => (
-                <CustomTable key={person.id} row={person} account={account} contract={contract} setSnackBar={setSnackBar} />
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow style={{ background: '#484848', overflowX: 'hidden' }}>
-                <AddPerson contract={contract} account={account} registerPerson={setRegisteredPerson} isPermitted={isPermitted} setSnackBar={setSnackBar} />
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 15, 25, { label: 'All', value: -1 }]}
-                  count={people.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    native: true,
-                  }}
-                  classes={{
-                    root: classes.root,
-                    menuItem: classes.menuItem,
-                  }}
-                  onChangePage={handleChangePage}
-                  onChangeRowsPerPage={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </React.Fragment>
-        ) : null}
-      </Table>
-    </TableContainer>
+    <div>
+      <div style={{ margin: '0 auto', maxWidth: '72%' }}>
+        <VaccineCheck contract={contract} account={account} isPermitted={isPermitted} setSnackBar={setSnackBar} />
+      </div>
+      <TableContainer component={Paper} style={{ maxWidth: '70%', margin: '0 auto', borderRadius: '20px' }} elevation={0}>
+        <Table size="small">
+          <TableHead>
+            <StyledTableRowOutside>
+              <StyledTableCell />
+              <StyledTableCell align="center">
+                <h5 className="table-head">ID</h5>
+              </StyledTableCell>
+              <StyledTableCell align="left">
+                <h5 className="table-head">Name</h5>
+              </StyledTableCell>
+              <StyledTableCell align="left">
+                <h5 className="table-head">Age</h5>
+              </StyledTableCell>
+              <StyledTableCell />
+            </StyledTableRowOutside>
+          </TableHead>
+          {!loading ? (
+            <React.Fragment>
+              <TableBody>
+                {(rowsPerPage > 0 ? people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : people).map((person) => (
+                  <CustomTable key={person.id} row={person} account={account} contract={contract} setSnackBar={setSnackBar} isPermitted={isPermitted} />
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow style={{ background: '#484848' }}>
+                  <AddPerson contract={contract} account={account} registerPerson={setRegisteredPerson} isPermitted={isPermitted} setSnackBar={setSnackBar} />
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 15, 25, { label: 'All', value: -1 }]}
+                    count={people.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      native: true,
+                    }}
+                    classes={{
+                      root: classes.root,
+                      menuItem: classes.menuItem,
+                    }}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            </React.Fragment>
+          ) : null}
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 

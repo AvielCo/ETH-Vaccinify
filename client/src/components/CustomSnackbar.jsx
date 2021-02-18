@@ -7,7 +7,7 @@ export default function CustomSnackbar({ severity, message, open, setOpen }) {
     <div>
       <Snackbar
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={(event, reason) => {
           if (reason === 'clickaway') {
             return;

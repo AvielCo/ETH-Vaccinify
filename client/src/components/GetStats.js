@@ -6,14 +6,16 @@ function GetStats({ contract, account, isPermitted }) {
   const [show, setShow] = useState(false);
 
   const showStats = async () => {
-    contract.methods.getStats().call({ from: account }, (error, res) => {
-      if (error) {
-        alert('You dont have permission!');
-      } else if (res !== undefined) {
+    contract.methods
+      .getStats()
+      .call({ from: account })
+      .then((res) => {
         setStats(res);
         setShow(true);
-      }
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleClick = (event) => {

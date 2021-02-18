@@ -2,7 +2,6 @@ import Web3 from 'web3';
 import React, { useEffect, useState } from 'react';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
 import GetStats from './components/GetStats';
-import AddPerson from './components/AddPerson';
 import VaccineCheck from './components/VaccineCheck';
 import PeopleList from './components/PeopleList';
 import { validateID } from './Validators';
@@ -17,7 +16,6 @@ function App() {
   const [vaccineContract, setVaccineContract] = useState();
   const [provideEthAccess, setProvideEthAccess] = useState(false);
   const [isPermitted, setIsPermitted] = useState(false);
-  const [totalRegistered, setTotalRegistered] = useState(0);
   const [registeredPerson, setRegisteredPerson] = useState(false);
   const [snackBarSeverity, setSnackBarSeverity] = useState('');
   const [snackBarMessage, setSnackBarMessage] = useState('');
@@ -44,13 +42,12 @@ function App() {
               !res && setSnackBar('You dont have permission to edit.', 'warning');
             })
             .catch((err) => {
-              setSnackBar(err, 'error');
+              setSnackBar('Metamask is require.', 'error');
             });
         }
         ethereum.on('accountsChanged', (accounts) => {
           setAccount(accounts[0]);
           if (vaccineContract) {
-            console.log(ethereum.selectedAddress);
             vaccineContract.methods
               .onlyPermittedPersonal(ethereum.selectedAddress)
               .call()
@@ -59,13 +56,12 @@ function App() {
                 !res && setSnackBar('You dont have permission to edit.', 'warning');
               })
               .catch((err) => {
-                setSnackBar(err, 'error');
+                setSnackBar('Metamask is require.', 'error');
               });
           }
         });
       } catch (error) {
-        console.log(error);
-        setSnackBar('Non-Ethereum browser detected. You should consider trying MetaMask!.', 'warning');
+        setSnackBar('Metamask is require.', 'warning');
         setProvideEthAccess(false);
       }
     } else if (window.web3) {
@@ -86,7 +82,7 @@ function App() {
     }
     // Non-dapp browsers...
     else {
-      setSnackBar('Non-Ethereum browser detected. You should consider trying MetaMask!.', 'warning');
+      setSnackBar('Metamask is require.', 'warning');
       setProvideEthAccess(false);
     }
   });
@@ -94,47 +90,33 @@ function App() {
   const init = async () => {
     const web3 = new Web3(window.ethereum);
 
-    const _vaccineContract = new web3.eth.Contract(VACCINE_ABI, VACCINE_ADRS);
-    setVaccineContract(_vaccineContract);
+    const contract = new web3.eth.Contract(VACCINE_ABI, VACCINE_ADRS);
+    setVaccineContract(contract);
 
-    const _totalRegistered = await _vaccineContract.methods.totalRegistered().call();
-    setTotalRegistered(_totalRegistered);
-
-    getPeople(_vaccineContract, _totalRegistered);
+    getPeople(contract);
   };
 
-  const getPeople = (contract, total) => {
+  const getPeople = (contract) => {
     let _people = [];
-    console.log(total);
-    if (!registeredPerson && loading) {
-      const a = async () => {
-        for (let i = 1; i <= total; i++) {
-          await contract.methods.people(i).call((error, res) => {
-            if (res) {
-              _people.push(res);
-            }
+    contract.methods
+      .getPeople()
+      .call()
+      .then((ppls) => {
+        ppls.forEach((ppl) => {
+          const { id, name, age, vaccineDate, vaccineLocation, vaccinated } = ppl;
+          _people.push({
+            id,
+            name,
+            age,
+            vaccineDate,
+            vaccineLocation,
+            vaccinated,
           });
-        }
-      };
-      a().then(() => {
-        console.log('inside if!registeredPerson && loading, then: ', _people);
-        setPeople(_people);
-        setLoading(false);
-      });
-    } else if (registeredPerson) {
-      _people = people;
-      console.log('inside else: ', _people);
-      contract.methods.people(Number(totalRegistered) + 1).call((error, res) => {
-        if (res) {
-          _people.push(res);
-          console.log('res: ', res);
-          console.log('inside else, inside if res: ', _people);
+          setLoading(false);
           setPeople(_people);
-          setRegisteredPerson(false);
-        }
-      });
-      setTotalRegistered(Number(totalRegistered) + 1);
-    }
+        });
+      })
+      .catch((err) => setSnackBar('An error has been occured.', 'error'));
   };
 
   const setSnackBar = (message, severity) => {
@@ -154,9 +136,6 @@ function App() {
         <div className="align-flex">
           <div>
             <div className="row align-row">
-              <div>
-                <VaccineCheck contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
-              </div>
               <div>
                 <GetStats contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
               </div>

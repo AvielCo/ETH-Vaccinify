@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
+import { Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
+import { Save } from '@material-ui/icons';
+import { UserAddOutlined } from '@ant-design/icons';
 
 function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
@@ -8,14 +10,15 @@ function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const addPerson = () => {
+    setSnackBar('Sending request... please wait.', 'info');
     contract.methods
-      .createPerson(name, id, parseInt(age))
+      .registerPerson(id, name, parseInt(age))
       .send({ from: account })
       .then((res) => {
         setSnackBar(`Successfully added person ${(name, id)}.\nRefresh the page to see the changes.`, 'success');
       })
       .catch((err) => {
-        setSnackBar(err, 'error');
+        setSnackBar('An error has been occured.', 'error');
       });
   };
 
@@ -46,14 +49,14 @@ function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar
   };
 
   return (
-    <div className="table" style={{ background: '#484848', position: 'absolute' }}>
-      <Button className="register" onClick={handleDialogState} color="secondary" disabled={!isPermitted}>
-        Register
-      </Button>
+    <div className="table-button">
+      <IconButton className="register" onClick={handleDialogState} disabled={!isPermitted}>
+        <UserAddOutlined />
+      </IconButton>
       <Dialog open={dialogOpen} onClose={handleDialogState} aria-labelledby="form-dialog-title">
         <DialogTitle>Register Person</DialogTitle>
         <DialogContent>
-          <DialogContentText>Register person you piece of flying shit</DialogContentText>
+          <DialogContentText>Register a new person to the blockchain database.</DialogContentText>
           <TextField autoFocus margin="dense" id="name" label="Name" type="text" fullWidth onChange={handleChange} helperText="over 3 characters" />
           <TextField margin="dense" id="id" label="ID" type="text" className="mr-4" onChange={handleChange} helperText="Israeli identification number" />
           <TextField margin="dense" id="age" label="Age" type="number" onChange={handleChange} helperText="0-120" />

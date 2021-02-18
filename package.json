@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client/src && npm start",
-    "dev": "cd client/src && npm run build",
+    "dev": "cd client/src && npm run build && cd .. && firebase deploy",
     "t-deploy": "truffle deploy --reset",
     "t-compile": "truffle compile",
     "t-migrate": "truffle migrate",
