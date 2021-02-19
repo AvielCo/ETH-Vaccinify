@@ -1,16 +1,26 @@
 import { Button } from '@material-ui/core';
 import React, { useState } from 'react';
+import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 function GetStats({ contract, account, isPermitted }) {
-  const [stats, setStats] = useState({});
   const [show, setShow] = useState(false);
+  const [totalRegistered, setTotalRegistered] = useState(0);
+  const [totalVaccinated, setTotalVaccinated] = useState(0);
+  const [vacAge, setVacAge] = useState(0);
+  const [unVacAge, setUnVacAge] = useState(0);
+
+  const totalUnVaccinated = totalRegistered - totalVaccinated;
 
   const showStats = async () => {
     contract.methods
       .getStats()
       .call({ from: account })
       .then((res) => {
-        setStats(res);
+        setTotalRegistered(res.total);
+        setTotalVaccinated(res.vaccinatedAmount);
+        setUnVacAge(res.totalUnVacAge);
+        setVacAge(res.totalVacAge);
         setShow(true);
       })
       .catch((err) => {
@@ -18,39 +28,28 @@ function GetStats({ contract, account, isPermitted }) {
       });
   };
 
-  const handleClick = (event) => {
-    showStats();
+  const handleClick = () => {
+    !show ? showStats() : setShow(false);
   };
+
   return (
     <div>
       <div>
-        <Button className="mt-2" onClick={handleClick} id="showStats" disabled={!isPermitted}>
+        <Button startIcon={show ? <IndeterminateCheckBoxIcon /> : <AddBoxIcon />} className="mt-2" onClick={handleClick} id="showStats" disabled={!isPermitted} hidden={!isPermitted}>
           Show statistics
         </Button>
       </div>
       <div>
-        {show && (
+        {show && totalRegistered > 0 && (
           <div>
-            <div>
-              <label>
-                <b>Total registered:</b> {stats[3]}
-              </label>
-            </div>
-            <div>
-              <label>
-                <b>Vaccinated percentage:</b> {(stats[0] / stats[3]) * 100} %
-              </label>
-            </div>
-            <div>
-              <label>
-                <b>Vaccinated average age:</b> {stats[1]}
-              </label>
-            </div>
-            <div>
-              <label>
-                <b>Unvaccinated average age:</b> {stats[2]}
-              </label>
-            </div>
+            <b>Total registered:</b> {totalRegistered} <br />
+            <b>Vaccinated percentage:</b> {(totalVaccinated / totalRegistered) * 100} % <br />
+            <b>Vaccinated average age:</b> {vacAge / totalVaccinated} <br />
+            {totalUnVaccinated > 0 && (
+              <div>
+                <b>Unvaccinated average age:</b> {unVacAge / totalUnVaccinated}
+              </div>
+            )}
           </div>
         )}
       </div>

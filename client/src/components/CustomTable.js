@@ -135,7 +135,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
         </StyledTableCell>
       </StyledTableRowOutside>
       <StyledTableRowOutside>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 70, backgroundColor: '#e6ffff' }} colSpan={4}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 70, backgroundColor: '#e6ffff' }} colSpan={5}>
           <StyledCollapse in={open} timeout="auto" unmountOnExit>
             <Typography variant="h6" gutterBottom component="div">
               Vaccine Details
@@ -149,7 +149,8 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
                   <TableCell>
                     <b>Date</b>
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell />
+                  <TableCell />
                 </StyledTableRowInside>
               </TableHead>
               <TableBody>

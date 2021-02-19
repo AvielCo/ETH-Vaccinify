@@ -3,7 +3,7 @@ import { Button, IconButton, Dialog, DialogActions, DialogContent, DialogContent
 import { Save } from '@material-ui/icons';
 import { UserAddOutlined } from '@ant-design/icons';
 
-function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar }) {
+function AddPerson({ contract, account, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
@@ -42,10 +42,6 @@ function AddPerson({ contract, account, registerPerson, isPermitted, setSnackBar
 
   const handleDialogState = () => {
     setDialogOpen(!dialogOpen);
-  };
-
-  const refresh = () => {
-    window.location.reload(false);
   };
 
   return (

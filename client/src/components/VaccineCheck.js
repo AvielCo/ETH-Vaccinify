@@ -3,22 +3,20 @@ import { Button, TextField } from '@material-ui/core';
 
 function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
-  const [isVaccinated, setIsVaccinated] = useState(false);
+  const [details, setDetails] = useState({});
   const [show, setShow] = useState(false);
   const [validID, setValidID] = useState(false);
-  const [transactionSuccses, setTransactionSuccses] = useState(false);
 
   const checkID = () => {
     contract.methods
       .checkIfVaccinated(id)
       .call({ from: account })
       .then((res) => {
-        console.log('res', res);
-        setIsVaccinated(res);
+        setDetails(res);
         setShow(true);
       })
       .catch((err) => {
-        console.log(typeof err.message);
+        setSnackBar(`Person with ID ${id} not found.`, 'info');
       });
   };
 
@@ -32,17 +30,27 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   }, [validID]);
 
   return (
-    <div style={{ background: '#82b3c9' }}>
-      <div>
-        {show && (
-          <div>
-            <label>
-              Person with ID <b>{id}</b> is {isVaccinated ? '' : 'not'} vaccinated.
-            </label>
-          </div>
-        )}
-        <TextField className="ml-5" variant="standard" type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange} />
-      </div>
+    <div>
+      <TextField className="ml-5" hidden={!isPermitted} variant="standard" type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange} />
+      {show && (
+        <div>
+          <p>
+            Person is {details.isVaccinated ? '' : 'not'} vaccinated.
+            <br />
+            <b>Name: </b> {details.name}
+            <br />
+            <b>ID: </b> {id}
+            <br />
+            {details.isVaccinated ? (
+              <div>
+                <b>Location: </b> {details.location}
+                <br />
+                <b>Date: </b> {new Date(parseInt(details.date)).toLocaleDateString('he')}
+              </div>
+            ) : null}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

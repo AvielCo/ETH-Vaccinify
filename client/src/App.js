@@ -2,12 +2,11 @@ import Web3 from 'web3';
 import React, { useEffect, useState } from 'react';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
 import GetStats from './components/GetStats';
-import VaccineCheck from './components/VaccineCheck';
 import PeopleList from './components/PeopleList';
-import { validateID } from './Validators';
 import CustomSnackbar from './components/CustomSnackbar';
 import './assets/style.css';
 import logo from './assets/logo.png';
+import CustomAppBar from './components/CustomAppBar';
 
 function App() {
   const [account, setAccount] = useState('');
@@ -16,10 +15,35 @@ function App() {
   const [vaccineContract, setVaccineContract] = useState();
   const [provideEthAccess, setProvideEthAccess] = useState(false);
   const [isPermitted, setIsPermitted] = useState(false);
-  const [registeredPerson, setRegisteredPerson] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const [snackBarSeverity, setSnackBarSeverity] = useState('');
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  const checkIfPermitted = (contract, address) => {
+    contract.methods
+      .onlyPermittedPersonal(address)
+      .call()
+      .then((res) => {
+        setIsPermitted(res);
+        !res && setSnackBar('You dont have permission to edit.', 'warning');
+      })
+      .catch((err) => {
+        setSnackBar('Metamask is require.', 'error');
+      });
+  };
+
+  const checkIfOwner = (contract, address) => {
+    contract.methods
+      .checkIsOwner(address)
+      .call()
+      .then((res) => {
+        setIsOwner(res);
+      })
+      .catch((err) => {
+        setSnackBar('Metamask is require.', 'error');
+      });
+  };
 
   const ethereum = window.ethereum;
   window.addEventListener('load', async () => {
@@ -32,32 +56,14 @@ function App() {
         setAccount(ethereum.selectedAddress);
         setProvideEthAccess(true);
         if (vaccineContract) {
-          console.log(ethereum.selectedAddress);
-
-          vaccineContract.methods
-            .onlyPermittedPersonal(ethereum.selectedAddress)
-            .call()
-            .then((res) => {
-              setIsPermitted(res);
-              !res && setSnackBar('You dont have permission to edit.', 'warning');
-            })
-            .catch((err) => {
-              setSnackBar('Metamask is require.', 'error');
-            });
+          checkIfPermitted(vaccineContract, ethereum.selectedAddress);
+          checkIfOwner(vaccineContract, ethereum.selectedAddress);
         }
         ethereum.on('accountsChanged', (accounts) => {
           setAccount(accounts[0]);
           if (vaccineContract) {
-            vaccineContract.methods
-              .onlyPermittedPersonal(ethereum.selectedAddress)
-              .call()
-              .then((res) => {
-                setIsPermitted(res);
-                !res && setSnackBar('You dont have permission to edit.', 'warning');
-              })
-              .catch((err) => {
-                setSnackBar('Metamask is require.', 'error');
-              });
+            checkIfPermitted(vaccineContract, ethereum.selectedAddress);
+            checkIfOwner(vaccineContract, ethereum.selectedAddress);
           }
         });
       } catch (error) {
@@ -68,20 +74,10 @@ function App() {
       window.web3 = new Web3(Web3.currentProvider);
       setProvideEthAccess(true);
       if (vaccineContract) {
-        vaccineContract.methods
-          .onlyPermittedPersonal(ethereum.selectedAddress)
-          .call()
-          .then((res) => {
-            setIsPermitted(true);
-          })
-          .catch((err) => {
-            setIsPermitted(false);
-            setSnackBar('You dont have permission to edit.', 'warning');
-          });
+        checkIfPermitted(vaccineContract, ethereum.selectedAddress);
+        checkIfOwner(vaccineContract, ethereum.selectedAddress);
       }
-    }
-    // Non-dapp browsers...
-    else {
+    } else {
       setSnackBar('Metamask is require.', 'warning');
       setProvideEthAccess(false);
     }
@@ -129,30 +125,18 @@ function App() {
 
   return (
     <div>
+      <CustomAppBar isOwner={isOwner} account={account} contract={vaccineContract} setSnackBar={setSnackBar} />
       <div className="row pt-2 align-col">
-        <div className="align-flex">
-          <img src={logo} alt="vaccinify-logo" />
-        </div>
         <div className="align-flex">
           <div>
             <div className="row align-row">
-              <div>
-                <GetStats contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
-              </div>
+              <GetStats contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
             </div>
           </div>
         </div>
       </div>
       <div className="pt-5">
-        <PeopleList
-          people={people}
-          contract={vaccineContract}
-          account={account}
-          isPermitted={isPermitted && provideEthAccess}
-          loading={loading}
-          setRegisteredPerson={setRegisteredPerson}
-          setSnackBar={setSnackBar}
-        />
+        <PeopleList people={people} contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} loading={loading} setSnackBar={setSnackBar} />
       </div>
       <div className="align-flex">
         <label className="m-5 credits"> © AviVit Technologies Inc. </label>

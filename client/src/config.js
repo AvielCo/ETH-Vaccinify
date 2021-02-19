@@ -14,6 +14,21 @@ export const VACCINE_ABI = [
     type: 'constructor',
   },
   {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'adrs',
+        type: 'address',
+      },
+    ],
+    name: 'addPermit',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     constant: true,
     inputs: [
       {
@@ -26,7 +41,43 @@ export const VACCINE_ABI = [
     outputs: [
       {
         internalType: 'bool',
-        name: 'isVaccinated',
+        name: 'result',
+        type: 'bool',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'location',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'date',
+        type: 'uint256',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'adrs',
+        type: 'address',
+      },
+    ],
+    name: 'checkIsOwner',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'isOwner',
         type: 'bool',
       },
     ],
@@ -99,26 +150,41 @@ export const VACCINE_ABI = [
   {
     constant: true,
     inputs: [],
+    name: 'getPermittedList',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
     name: 'getStats',
     outputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'total',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: '',
+        name: 'vaccinatedAmount',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: '',
+        name: 'totalVacAge',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: '',
+        name: 'totalUnVacAge',
         type: 'uint256',
       },
     ],
@@ -139,7 +205,7 @@ export const VACCINE_ABI = [
     outputs: [
       {
         internalType: 'bool',
-        name: 'isPersonal',
+        name: 'isPermitted',
         type: 'bool',
       },
     ],
@@ -228,6 +294,27 @@ export const VACCINE_ABI = [
     constant: false,
     inputs: [
       {
+        internalType: 'address',
+        name: 'adrs',
+        type: 'address',
+      },
+    ],
+    name: 'removePermit',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'result',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
         internalType: 'string',
         name: '_id',
         type: 'string',
@@ -266,4 +353,4 @@ export const VACCINE_ABI = [
   },
 ];
 
-export const VACCINE_ADRS = '0x3437C754e1aC2AB7625c7d895C26a4B9f7950bf4';
+export const VACCINE_ADRS = '0x3902b75ce771FDC32F2B639A1f9dF6e4C543D915';
