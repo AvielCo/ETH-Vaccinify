@@ -26,7 +26,6 @@ h5.table-head {
 /* div */
 
 div.align-row {
-  justify-content: center;
   flex-direction: row;
 }
 
@@ -67,8 +66,11 @@ label.credits {
   color: var(--table-primary-color);
 }
 
-/* media query */
+.MuiDivider-root.MuiDivider-vertical {
+  background: red;
+}
 
+/* media query */
 @media (max-width: 700px) {
   div.align-row {
     align-content: center;

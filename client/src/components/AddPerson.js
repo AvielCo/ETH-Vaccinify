@@ -3,7 +3,7 @@ import { Button, IconButton, Dialog, DialogActions, DialogContent, DialogContent
 import { Save } from '@material-ui/icons';
 import { UserAddOutlined } from '@ant-design/icons';
 
-function AddPerson({ contract, account, isPermitted, setSnackBar }) {
+function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
@@ -15,9 +15,11 @@ function AddPerson({ contract, account, isPermitted, setSnackBar }) {
       .registerPerson(id, name, parseInt(age))
       .send({ from: account })
       .then((res) => {
+        setAddedPerson(true);
         setSnackBar(`Successfully added person ${(name, id)}.\nRefresh the page to see the changes.`, 'success');
       })
       .catch((err) => {
+        setAddedPerson(false);
         setSnackBar('An error has been occured.', 'error');
       });
   };

@@ -3,12 +3,13 @@ import { AppBar, Typography, Toolbar, IconButton, Tooltip } from '@material-ui/c
 import { ArrowDropDown } from '@material-ui/icons';
 import Permit from './Permit';
 import logo from '../assets/logo.png';
+
 function CustomAppBar({ isOwner, account, contract, setSnackBar }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <div style={{ flexGrow: 1 }}>
+    <div>
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           <Tooltip title="Permitted edit">
             <IconButton hidden={!isOwner} onClick={() => setDialogOpen(true)}>
               <ArrowDropDown />

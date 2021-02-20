@@ -6,6 +6,7 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   const [details, setDetails] = useState({});
   const [show, setShow] = useState(false);
   const [validID, setValidID] = useState(false);
+  const [personFound, setPersonFound] = useState(false);
 
   const checkID = () => {
     contract.methods
@@ -14,9 +15,11 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
       .then((res) => {
         setDetails(res);
         setShow(true);
+        setPersonFound(true);
       })
       .catch((err) => {
-        setSnackBar(`Person with ID ${id} not found.`, 'info');
+        setShow(true);
+        setPersonFound(false);
       });
   };
 
@@ -31,26 +34,39 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
 
   return (
     <div>
-      <TextField className="ml-5" hidden={!isPermitted} variant="standard" type="text" id="vaccCheck" value={id} placeholder="ID" onChange={handleChange} />
-      {show && (
-        <div>
-          <p>
-            Person is {details.isVaccinated ? '' : 'not'} vaccinated.
+      <TextField hidden={!isPermitted} variant="standard" type="text" value={id} placeholder="ID" onChange={handleChange} />
+      {/* 
+          the conditions in this div below:
+          if id is invalid: no border
+          else:
+            if person not found: border-danger (red border)
+            else if person found AND is not vaccinated: border-warning (yellow border)
+            else: border-success (green border)
+      */}
+      <div className={`${validID ? `border border-${!personFound ? 'danger' : !details.result ? 'warning' : 'success'}` : null} p-1 mt-1`}>
+        {!personFound && show && (
+          <div>
+            <b>Person with ID: {id} not found</b>
+          </div>
+        )}
+        {personFound && show && (
+          <div>
+            Person is {details.result ? '' : <b>not</b>} vaccinated.
             <br />
             <b>Name: </b> {details.name}
             <br />
             <b>ID: </b> {id}
             <br />
-            {details.isVaccinated ? (
+            {details.result ? (
               <div>
                 <b>Location: </b> {details.location}
                 <br />
                 <b>Date: </b> {new Date(parseInt(details.date)).toLocaleDateString('he')}
               </div>
             ) : null}
-          </p>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

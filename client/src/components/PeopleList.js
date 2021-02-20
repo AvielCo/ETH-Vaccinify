@@ -31,7 +31,7 @@ const TablePaginationStyles = makeStyles(() => ({
   },
 }));
 
-function PeopleList({ people, contract, account, isPermitted, loading, setRegisteredPerson, setSnackBar }) {
+function PeopleList({ people, contract, account, isPermitted, loading, setAddedPerson, setSnackBar }) {
   //Pagination system
   const classes = TablePaginationStyles();
   const [page, setPage] = useState(0);
@@ -47,10 +47,7 @@ function PeopleList({ people, contract, account, isPermitted, loading, setRegist
 
   return (
     <div>
-      <div style={{ margin: '0 auto', maxWidth: '72%' }}>
-        <VaccineCheck contract={contract} account={account} isPermitted={isPermitted} setSnackBar={setSnackBar} />
-      </div>
-      <TableContainer component={Paper} style={{ maxWidth: '70%', margin: '0 auto', borderRadius: '20px' }} elevation={0}>
+      <TableContainer component={Paper} style={{ borderRadius: '20px' }} elevation={0}>
         <Table size="small">
           <TableHead>
             <StyledTableRowOutside>
@@ -76,7 +73,7 @@ function PeopleList({ people, contract, account, isPermitted, loading, setRegist
               </TableBody>
               <TableFooter>
                 <TableRow style={{ background: '#484848' }}>
-                  <AddPerson contract={contract} account={account} registerPerson={setRegisteredPerson} isPermitted={isPermitted} setSnackBar={setSnackBar} />
+                  <AddPerson contract={contract} account={account} isPermitted={isPermitted} setAddedPerson={setAddedPerson} setSnackBar={setSnackBar} />
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 15, 25, { label: 'All', value: -1 }]}
                     count={people.length}

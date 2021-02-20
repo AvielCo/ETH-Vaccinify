@@ -1,12 +1,14 @@
 import Web3 from 'web3';
 import React, { useEffect, useState } from 'react';
+import { Divider } from '@material-ui/core';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
 import GetStats from './components/GetStats';
 import PeopleList from './components/PeopleList';
 import CustomSnackbar from './components/CustomSnackbar';
-import './assets/style.css';
-import logo from './assets/logo.png';
 import CustomAppBar from './components/CustomAppBar';
+import Credits from './components/Credits';
+import VaccineCheck from './components/VaccineCheck';
+import './assets/style.css';
 
 function App() {
   const [account, setAccount] = useState('');
@@ -19,6 +21,7 @@ function App() {
   const [snackBarSeverity, setSnackBarSeverity] = useState('');
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [addedPerson, setAddedPerson] = useState(false);
 
   const checkIfPermitted = (contract, address) => {
     contract.methods
@@ -122,24 +125,40 @@ function App() {
   };
 
   useEffect(() => init(), []);
+  useEffect(() => {
+    if (addedPerson && vaccineContract) {
+      getPeople(vaccineContract);
+      setAddedPerson(false);
+    }
+  }, [addedPerson]);
 
   return (
     <div>
       <CustomAppBar isOwner={isOwner} account={account} contract={vaccineContract} setSnackBar={setSnackBar} />
-      <div className="row pt-2 align-col">
-        <div className="align-flex">
-          <div>
-            <div className="row align-row">
-              <GetStats contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
-            </div>
+      <div className="container pt-5">
+        <div className="row">
+          <div className="col col-md-9">
+            <PeopleList
+              people={people}
+              contract={vaccineContract}
+              account={account}
+              setAddedPerson={setAddedPerson}
+              isPermitted={isPermitted && provideEthAccess}
+              loading={loading}
+              setSnackBar={setSnackBar}
+            />
+          </div>
+          <div className="col pt-3" hidden={!isPermitted}>
+            <VaccineCheck contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} setSnackBar={setSnackBar} />
+            <GetStats contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} />
           </div>
         </div>
       </div>
-      <div className="pt-5">
-        <PeopleList people={people} contract={vaccineContract} account={account} isPermitted={isPermitted && provideEthAccess} loading={loading} setSnackBar={setSnackBar} />
-      </div>
-      <div className="align-flex">
-        <label className="m-5 credits"> © AviVit Technologies Inc. </label>
+      <div className="mt-5">
+        <Divider />
+        <div>
+          <Credits />
+        </div>
       </div>
       <CustomSnackbar severity={snackBarSeverity} message={snackBarMessage} open={snackBarOpen} setOpen={setSnackBarOpen} />
     </div>
