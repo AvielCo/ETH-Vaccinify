@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { TextField, Divider } from '@material-ui/core';
 
 function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
@@ -28,9 +28,8 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
     setValidID(event.target.value.length === 9);
   };
 
-  useEffect(() => {
-    !validID ? setShow(false) : checkID();
-  }, [validID]);
+  // eslint-disable-next-line
+  useEffect(() => (!validID ? setShow(false) : checkID()), [validID]);
 
   return (
     <div>
@@ -43,7 +42,7 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
             else if person found AND is not vaccinated: border-warning (yellow border)
             else: border-success (green border)
       */}
-      <div className={`${validID ? `border border-${!personFound ? 'danger' : !details.result ? 'warning' : 'success'}` : null} p-1 mt-1`}>
+      <div className={`${validID ? `border border-${!personFound ? 'notfound' : !details.result ? 'notvaccinated' : 'vaccinated'}` : null} p-1 mt-1`}>
         {!personFound && show && (
           <div>
             <b>Person with ID: {id} not found</b>
@@ -52,15 +51,15 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
         {personFound && show && (
           <div>
             Person is {details.result ? '' : <b>not</b>} vaccinated.
-            <br />
+            <Divider />
             <b>Name: </b> {details.name}
-            <br />
+            <Divider />
             <b>ID: </b> {id}
-            <br />
             {details.result ? (
               <div>
+                <Divider />
                 <b>Location: </b> {details.location}
-                <br />
+                <Divider />
                 <b>Date: </b> {new Date(parseInt(details.date)).toLocaleDateString('he')}
               </div>
             ) : null}

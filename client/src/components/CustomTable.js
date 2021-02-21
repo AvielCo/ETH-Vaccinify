@@ -107,10 +107,6 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
       });
   };
 
-  const refresh = () => {
-    window.location.reload(false);
-  };
-
   return (
     <React.Fragment>
       <StyledTableRowOutside className={classes.root}>

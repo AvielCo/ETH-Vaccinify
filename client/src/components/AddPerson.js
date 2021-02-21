@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
-import { Save } from '@material-ui/icons';
 import { UserAddOutlined } from '@ant-design/icons';
 
 function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar }) {

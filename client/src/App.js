@@ -124,12 +124,15 @@ function App() {
     setSnackBarOpen(true);
   };
 
+  // eslint-disable-next-line
   useEffect(() => init(), []);
+
   useEffect(() => {
     if (addedPerson && vaccineContract) {
       getPeople(vaccineContract);
       setAddedPerson(false);
     }
+    // eslint-disable-next-line
   }, [addedPerson]);
 
   return (

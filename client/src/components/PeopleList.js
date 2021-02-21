@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Table, TableBody, makeStyles, TableRow, TableCell, TableFooter, TableContainer, TablePagination, TableHead, Paper, withStyles, Typography } from '@material-ui/core';
+import { Table, TableBody, makeStyles, TableRow, TableCell, TableFooter, TableContainer, TablePagination, TableHead, Paper, withStyles } from '@material-ui/core';
 import TablePaginationActions from './TablePaginationActions';
 import CustomTable from './CustomTable';
 import AddPerson from './AddPerson';
-import VaccineCheck from './VaccineCheck';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: '#484848',
@@ -36,7 +35,6 @@ function PeopleList({ people, contract, account, isPermitted, loading, setAddedP
   const classes = TablePaginationStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, people.length - page * rowsPerPage);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

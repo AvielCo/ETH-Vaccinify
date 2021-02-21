@@ -23,6 +23,17 @@ h5.table-head {
   text-shadow: 1px 1px 2px black;
 }
 
+/* border */
+
+.border.border-notfound {
+  border-color: black !important;
+}
+.border.border-notvaccinated {
+  border-color: darkred !important;
+}
+.border.border-vaccinated {
+  border-color: darkgreen !important;
+}
 /* div */
 
 div.align-row {

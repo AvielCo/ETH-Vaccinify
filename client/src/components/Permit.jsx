@@ -23,6 +23,7 @@ function Permit({ contract, account, isOwner, dialogOpen, setDialogOpen, setSnac
           console.log(err);
         });
     }
+    // eslint-disable-next-line
   }, [dialogOpen, changedList]);
 
   const addAddressToPermittedList = () => {

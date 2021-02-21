@@ -2,6 +2,7 @@ import { Button } from '@material-ui/core';
 import React, { useState } from 'react';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import { Divider } from '@material-ui/core';
 
 function GetStats({ contract, account, isPermitted }) {
   const [show, setShow] = useState(false);
@@ -43,13 +44,17 @@ function GetStats({ contract, account, isPermitted }) {
         {show && totalRegistered > 0 && (
           <div>
             <b>Total registered:</b> {totalRegistered} <br />
+            <Divider />
             <b>Vaccinated percentage:</b> {(totalVaccinated / totalRegistered) * 100} % <br />
+            <Divider />
             <b>Vaccinated average age:</b> {vacAge / totalVaccinated} <br />
+            <Divider />
             {totalUnVaccinated > 0 && (
               <div>
                 <b>Unvaccinated average age:</b> {unVacAge / totalUnVaccinated}
               </div>
             )}
+            <Divider />
           </div>
         )}
       </div>

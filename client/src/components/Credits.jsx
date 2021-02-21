@@ -2,7 +2,6 @@ import React from 'react';
 import { Avatar, Typography, makeStyles } from '@material-ui/core';
 import github from '../assets/logo-github.svg';
 import linkedin from '../assets/logo-linkedin.svg';
-import aviel from '../assets/aviel.jpg';
 import { IconButton, ButtonGroup } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
