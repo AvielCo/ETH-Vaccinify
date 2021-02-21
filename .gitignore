@@ -2,12 +2,9 @@ node_modules/
 helpful tips/
 .firebase/
 .github/
-build/
 public/
 test/*
 migrations/
 .firebaserc
 firebase.json
-truffle-config.js
-package-lock.json
-package.json
+back/
