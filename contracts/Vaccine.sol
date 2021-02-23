@@ -23,7 +23,7 @@ contract Vaccine {
     }
     
     // returns if the address is permitted to edit the blockchain.
-    function onlyPermittedPersonal(address sender) public view returns(bool){
+    function onlyPermittedPersonal(address sender) public view returns(bool isPermitted){
         for(uint i; i < permitted.length; i++){
             if(sender == permitted[i]){
                 return true;
@@ -38,6 +38,16 @@ contract Vaccine {
         _;
     }
     
+    // check if sender address is owner (the deployer of this contract).
+    modifier isOwner() {
+        require(msg.sender == owner, "You are not the owner.");
+        _;
+    }
+    
+    
+    function getPermittedList() public view isOwner returns(address[] memory){
+        return permitted;
+    }
     
     // returns every id that registered in the blockchain.
     function getIds() public view returns(string[] memory){
@@ -52,13 +62,6 @@ contract Vaccine {
         }
         return _people;
     }
-    
-    // check if sender address is owner (the deployer of this contract).
-    modifier isOwner() {
-        require(msg.sender == owner, "You are not the owner.");
-        _;
-    }
-    
     
     // adds an address that has a permit to edit the blockchain.
     function addPermit(address adrs) public isOwner{
@@ -83,12 +86,12 @@ contract Vaccine {
     }
     
     
-    function checkIsOwner(address adrs) public view returns(bool) {
+    function checkIsOwner(address adrs) public view returns(bool isOwner) {
        return owner == adrs;
     }
     
     // check if id is exists in ids array.
-    function checkIfIDExists(string memory id) private view returns(bool, uint) {
+    function checkIfIDExists(string memory id) private view returns(bool result, uint index) {
         for(uint i = 0; i < ids.length; i++){
             if(keccak256(abi.encodePacked(ids[i])) == keccak256(abi.encodePacked(id))){
                 return (true, i);
@@ -116,7 +119,7 @@ contract Vaccine {
     }
 
     // check if person is vaccinated (if vaccinated == true or false).
-    function checkIfVaccinated(string memory _id) public view checkPersonalAddress returns(bool, string memory, string memory, uint)  {
+    function checkIfVaccinated(string memory _id) public view checkPersonalAddress returns(bool result, string memory name, string memory location, uint date)  {
         (bool isExists, uint index) = checkIfIDExists(_id);
         require(isExists, "Invalid ID.");
         return (people[_id].vaccinated, people[_id].name, people[_id].vaccineLocation, people[_id].vaccineDate) ;
@@ -132,7 +135,7 @@ contract Vaccine {
     }
 
     // get statistics of the blockchain.
-    function getStats() public view checkPersonalAddress returns(uint, uint, uint, uint) {
+    function getStats() public view checkPersonalAddress returns(uint total, uint vaccinatedAmount, uint totalVacAge, uint totalUnVacAge) {
         if(ids.length == 0){
             return (0, 0, 0, 0);
         }
@@ -145,12 +148,12 @@ contract Vaccine {
             Person storage person = people[ids[i]];
             if (person.vaccinated == true) {
                 vaccinatedCount++;
-                totalVaccinatedAge = totalVaccinatedAge + person.age;
+                totalVaccinatedAge += person.age;
             }
             else{
-                totalUnVaccinatedAge = totalUnVaccinatedAge + person.age;
+                totalUnVaccinatedAge += person.age;
             }
         }
-        return (vaccinatedCount, totalVaccinatedAge, totalUnVaccinatedAge, ids.length);
+        return (ids.length, vaccinatedCount, totalVaccinatedAge, totalUnVaccinatedAge);
     }
 }

@@ -38,9 +38,9 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
           the conditions in this div below:
           if id is invalid: no border
           else:
-            if person not found: border-danger (red border)
-            else if person found AND is not vaccinated: border-warning (yellow border)
-            else: border-success (green border)
+            if person not found: border-notfound (red border)
+            else if person found AND is not vaccinated: border-notvaccinated (yellow border)
+            else: border-vaccinated (green border)
       */}
       <div className={`${validID ? `border border-${!personFound ? 'notfound' : !details.result ? 'notvaccinated' : 'vaccinated'}` : null} p-1 mt-1`}>
         {!personFound && show && (
