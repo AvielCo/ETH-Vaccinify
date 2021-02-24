@@ -19,7 +19,7 @@ function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar
     setSnackBar('Sending request... please wait.', 'info');
     contract.methods
       .registerPerson(id, name, age)
-      .send({ from: account, gas: 3000000, gasPrice: "20" })
+      .send({ from: account, gas: 3000000, gasPrice: 20000000000 })
       .then((res) => {
         setAddedPerson(true);
         setSnackBar(`Successfully added person ${(name, id)}.\nRefresh the page to see the changes.`, 'success');

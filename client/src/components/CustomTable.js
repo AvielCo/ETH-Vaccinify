@@ -81,7 +81,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
     setSnackBar('Sending request... please wait.', 'info');
     contract.methods
       .vaccinatePerson(row.id, location, date)
-      .send({ from: account, gas: 3000000, gasPrice: '20' })
+      .send({ from: account, gas: 3000000, gasPrice: 20000000000 })
       .then((res) => {
         setSnackBar(`Successfully updated person ${(row.name, row.id)}.`, 'success');
       })
@@ -98,7 +98,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
     setSnackBar('Sending request... please wait.', 'info');
     contract.methods
       .removePerson(row.id)
-      .send({ from: account, gas: 3000000, gasPrice: '20' })
+      .send({ from: account, gas: 3000000, gasPrice: 20000000000 })
       .then((res) => {
         setSnackBar(`Successfully removed person ${(row.name, row.id)}.`, 'success');
       })
@@ -184,7 +184,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
                   </StyledTableCell>
                   <StyledTableCell>
                     <Button
-                      hidden={!isPermitted}
+                      hidden={!isPermitted || row.vaccinated}
                       disabled={!isGoodDate || location.length === 0}
                       disableElevation
                       variant="contained"
