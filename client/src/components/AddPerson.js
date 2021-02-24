@@ -7,8 +7,6 @@ import { validateID } from '../Validators';
 import { useForm, Controller } from 'react-hook-form';
 
 function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar }) {
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
   const [age, setAge] = useState(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isValidDate, setIsValidDate] = useState(false);

@@ -4,7 +4,7 @@ import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App className="bg-color-custom" />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -54,17 +54,17 @@ function GetStats({ contract, account, isPermitted }) {
           <div>
             <b>Total registered:</b> {totalRegistered} <br />
             <Divider />
-            <b>Vaccinated percentage:</b> {(totalVaccinated / totalRegistered) * 100} % <br />
+            <b>Vaccinated percentage:</b> {((totalVaccinated / totalRegistered) * 100).toFixed(2)} % <br />
             <Divider />
             {totalVaccinated > 0 && (
               <div>
-                <b>Vaccinated average age:</b> {vacAge / totalVaccinated} <br />
+                <b>Vaccinated average age:</b> {(vacAge / totalVaccinated).toFixed(0)} <br />
                 <Divider />
               </div>
             )}
             {totalUnVaccinated > 0 && (
               <div>
-                <b>Unvaccinated average age:</b> {unVacAge / totalUnVaccinated}
+                <b>Unvaccinated average age:</b> {(unVacAge / totalUnVaccinated).toFixed(0)}
               </div>
             )}
             <Divider />

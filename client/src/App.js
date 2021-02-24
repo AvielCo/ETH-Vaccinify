@@ -111,8 +111,8 @@ function App() {
             vaccineLocation,
             vaccinated,
           });
-          setLoading(false);
           setPeople(_people);
+          setLoading(false);
         });
       })
       .catch((err) => setSnackBar('An error has been occured.', 'error'));

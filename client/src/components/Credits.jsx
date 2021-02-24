@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Typography, makeStyles } from '@material-ui/core';
+import { Avatar, Typography, makeStyles, Box } from '@material-ui/core';
 import github from '../assets/logo-github.svg';
 import linkedin from '../assets/logo-linkedin.svg';
 import { IconButton, ButtonGroup } from '@material-ui/core';
@@ -58,14 +58,16 @@ export default function Credits() {
                   </div>
                   <div className="pt-2 pl-1">
                     <Typography variant="h6">{creator.name}</Typography>
-                    <ButtonGroup variant="text" disableElevation>
-                      <IconButton href={`https://github.com/${creator.github}`} size="small">
-                        <Avatar src={github} className={classes.small} />
-                      </IconButton>
-                      <IconButton href={`https://linkedin/in/${creator.linkedin}`} size="small">
-                        <Avatar src={linkedin} className={classes.small} />
-                      </IconButton>
-                    </ButtonGroup>
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                      <ButtonGroup variant="text" disableElevation>
+                        <IconButton href={`https://github.com/${creator.github}`} size="small">
+                          <Avatar src={github} className={classes.small} />
+                        </IconButton>
+                        <IconButton href={`https://linkedin/in/${creator.linkedin}`} size="small">
+                          <Avatar src={linkedin} className={classes.small} />
+                        </IconButton>
+                      </ButtonGroup>
+                    </Box>
                   </div>
                 </div>
               </div>
@@ -73,7 +75,7 @@ export default function Credits() {
           })}
         </div>
         <div className="pt-2">
-          <label className="credits"> © AviVit Technologies Inc. </label>
+          <label className="credits"> © 2021 AviVit Technologies Inc. </label>
         </div>
       </div>
     </div>
