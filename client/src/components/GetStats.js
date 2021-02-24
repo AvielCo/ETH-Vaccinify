@@ -20,8 +20,12 @@ function GetStats({ contract, account, isPermitted }) {
       .then((res) => {
         setTotalRegistered(res.total);
         setTotalVaccinated(res.vaccinatedAmount);
-        setUnVacAge(res.totalUnVacAge);
-        setVacAge(res.totalVacAge);
+        let t_vacAge = 0;
+        let t_unVacAge = 0;
+        res.totalUnVacAge.filter((dob) => dob !== '0').map((dob) => (t_unVacAge += calculateAge(dob)));
+        res.totalVacAge.filter((dob) => dob !== '0').map((dob) => (t_vacAge += calculateAge(dob)));
+        setUnVacAge(t_unVacAge);
+        setVacAge(t_vacAge);
         setShow(true);
       })
       .catch((err) => {
@@ -31,6 +35,11 @@ function GetStats({ contract, account, isPermitted }) {
 
   const handleClick = () => {
     !show ? showStats() : setShow(false);
+  };
+
+  const calculateAge = (dob) => {
+    const diff = new Date(parseInt(new Date() - new Date(parseInt(dob))));
+    return diff.getUTCFullYear() - 1970;
   };
 
   return (
@@ -47,8 +56,12 @@ function GetStats({ contract, account, isPermitted }) {
             <Divider />
             <b>Vaccinated percentage:</b> {(totalVaccinated / totalRegistered) * 100} % <br />
             <Divider />
-            <b>Vaccinated average age:</b> {vacAge / totalVaccinated} <br />
-            <Divider />
+            {totalVaccinated > 0 && (
+              <div>
+                <b>Vaccinated average age:</b> {vacAge / totalVaccinated} <br />
+                <Divider />
+              </div>
+            )}
             {totalUnVaccinated > 0 && (
               <div>
                 <b>Unvaccinated average age:</b> {unVacAge / totalUnVaccinated}

@@ -1,15 +1,10 @@
 export const validateID = (id) => {
-  const response = {
-    result: false,
-    cause: '',
-  };
   if (id.length !== 9) {
-    response.cause = 'id must have 9 characters.';
-    return response;
+    return false;
   } else if (typeof id !== 'string' || isNaN(id)) {
-    response.cause = 'id must be type of string and contains numbers only.';
-    return response;
+    return false;
   }
+
   let sum = 0;
   let incNum;
   for (const i in id) {
@@ -17,9 +12,7 @@ export const validateID = (id) => {
     sum += incNum > 9 ? incNum - 9 : incNum; // Sum the digits up and add to total
   }
   if (sum % 10 !== 0) {
-    response.cause = 'invalid id.';
-    return response;
+    return false;
   }
-  response.result = true;
-  return response;
+  return true;
 };

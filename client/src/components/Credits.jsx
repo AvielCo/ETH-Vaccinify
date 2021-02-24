@@ -45,11 +45,12 @@ export default function Credits() {
   return (
     <div>
       <div className="container mt-2">
+        Developers:
         <div className="row">
           {creators.map((creator) => {
             return (
               <div className="border border-dark rounded p-1 mr-2 mb-2">
-                <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', alignItems: 'center' }}>
                   <div>
                     <Avatar alt={creator.name} src={creator.pic} className={classes.large}>
                       {creator.firstLetter}

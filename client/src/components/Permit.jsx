@@ -34,7 +34,7 @@ function Permit({ contract, account, isOwner, dialogOpen, setDialogOpen, setSnac
     setError(false);
     contract.methods
       .addPermit(address)
-      .send({ from: account })
+      .send({ from: account, gas: 3000000, gasPrice: '20' })
       .once('confirmation', (confirmationNumber, receipt) => {
         if (receipt.status) {
           setSnackBar(`Succssesfuly given permissions to address ${address}.`, 'success');
@@ -49,7 +49,7 @@ function Permit({ contract, account, isOwner, dialogOpen, setDialogOpen, setSnac
   const removeAddressFromPermittedList = (adrs) => {
     contract.methods
       .removePermit(adrs)
-      .send({ from: account })
+      .send({ from: account, gas: 3000000, gasPrice: '20' })
       .once('confirmation', (confirmationNumber, receipt) => {
         if (receipt.status) {
           setSnackBar(`Succssesfuly removed permissions from address ${adrs}.`, 'success');

@@ -30,7 +30,7 @@ const TablePaginationStyles = makeStyles(() => ({
   },
 }));
 
-function PeopleList({ people, contract, account, isPermitted, loading, setAddedPerson, setSnackBar }) {
+function PeopleList({ people, contract, account, isPermitted, isOwner, loading, setAddedPerson, setSnackBar }) {
   //Pagination system
   const classes = TablePaginationStyles();
   const [page, setPage] = useState(0);
@@ -71,7 +71,7 @@ function PeopleList({ people, contract, account, isPermitted, loading, setAddedP
               </TableBody>
               <TableFooter>
                 <TableRow style={{ background: '#484848' }}>
-                  <AddPerson contract={contract} account={account} isPermitted={isPermitted} setAddedPerson={setAddedPerson} setSnackBar={setSnackBar} />
+                  <AddPerson contract={contract} account={account} isPermitted={isPermitted} isOwner={isOwner} setAddedPerson={setAddedPerson} setSnackBar={setSnackBar} />
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 15, 25, { label: 'All', value: -1 }]}
                     count={people.length}

@@ -92,12 +92,12 @@ function App() {
     const contract = new web3.eth.Contract(VACCINE_ABI, VACCINE_ADRS);
     setVaccineContract(contract);
 
-    getPeople(contract);
+    getPeople(contract).then(() => setLoading(false));
   };
 
-  const getPeople = (contract) => {
+  const getPeople = async (contract) => {
     let _people = [];
-    contract.methods
+    await contract.methods
       .getPeople()
       .call()
       .then((ppls) => {
@@ -147,6 +147,7 @@ function App() {
               account={account}
               setAddedPerson={setAddedPerson}
               isPermitted={isPermitted && provideEthAccess}
+              isOwner={isOwner}
               loading={loading}
               setSnackBar={setSnackBar}
             />

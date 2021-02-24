@@ -81,7 +81,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
     setSnackBar('Sending request... please wait.', 'info');
     contract.methods
       .vaccinatePerson(row.id, location, date)
-      .send({ from: account })
+      .send({ from: account, gas: 3000000, gasPrice: '20' })
       .then((res) => {
         setSnackBar(`Successfully updated person ${(row.name, row.id)}.`, 'success');
       })
@@ -98,13 +98,18 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
     setSnackBar('Sending request... please wait.', 'info');
     contract.methods
       .removePerson(row.id)
-      .send({ from: account })
+      .send({ from: account, gas: 3000000, gasPrice: '20' })
       .then((res) => {
         setSnackBar(`Successfully removed person ${(row.name, row.id)}.`, 'success');
       })
       .catch((err) => {
         setSnackBar('An error has been occured when trying to remove a person.', 'error');
       });
+  };
+
+  const calculateAge = (age) => {
+    const diff = new Date(parseInt(new Date() - new Date(parseInt(age))));
+    return diff.getUTCFullYear() - 1970;
   };
 
   return (
@@ -122,7 +127,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
           {row.name}
         </StyledTableCell>
         <StyledTableCell style={{ width: '16%' }} padding="checkbox" align="left">
-          {row.age}
+          {calculateAge(row.age)}
         </StyledTableCell>
         <StyledTableCell style={{ width: '16%' }} padding="checkbox" align="left">
           <IconButton size="small" onClick={() => removePerson()} hidden={!isPermitted}>

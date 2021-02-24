@@ -118,9 +118,9 @@ export const VACCINE_ABI = [
             type: 'string',
           },
           {
-            internalType: 'uint256',
+            internalType: 'int256',
             name: 'age',
-            type: 'uint256',
+            type: 'int256',
           },
           {
             internalType: 'uint256',
@@ -178,14 +178,14 @@ export const VACCINE_ABI = [
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
+        internalType: 'int256[]',
         name: 'totalVacAge',
-        type: 'uint256',
+        type: 'int256[]',
       },
       {
-        internalType: 'uint256',
+        internalType: 'int256[]',
         name: 'totalUnVacAge',
-        type: 'uint256',
+        type: 'int256[]',
       },
     ],
     payable: false,
@@ -235,9 +235,9 @@ export const VACCINE_ABI = [
         type: 'string',
       },
       {
-        internalType: 'uint256',
+        internalType: 'int256',
         name: 'age',
-        type: 'uint256',
+        type: 'int256',
       },
       {
         internalType: 'uint256',
@@ -273,9 +273,9 @@ export const VACCINE_ABI = [
         type: 'string',
       },
       {
-        internalType: 'uint256',
+        internalType: 'int256',
         name: '_age',
-        type: 'uint256',
+        type: 'int256',
       },
     ],
     name: 'registerPerson',
@@ -353,4 +353,4 @@ export const VACCINE_ABI = [
   },
 ];
 
-export const VACCINE_ADRS = '0x3902b75ce771FDC32F2B639A1f9dF6e4C543D915';
+export const VACCINE_ADRS = '0x230710701beACb53477A8531e0a6FFC10dcBf75A';
