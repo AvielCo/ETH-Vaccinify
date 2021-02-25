@@ -108,7 +108,7 @@ function CustomTable({ row, account, contract, setSnackBar, isPermitted }) {
   };
 
   const calculateAge = (age) => {
-    const diff = new Date(parseInt(new Date() - new Date(parseInt(age))));
+    const diff = new Date(parseInt(new Date() - new Date(age)));
     return diff.getUTCFullYear() - 1970;
   };
 

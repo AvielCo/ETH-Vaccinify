@@ -94,7 +94,7 @@ function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar
                     required: 'Required',
                     minLength: { value: 9, message: 'ID must have 9 digits' },
                     maxLength: { value: 9, message: 'ID must have 9 digits' },
-                    validate: validateID,
+                    // validate: validateID,
                   }}
                 />
               </FormControl>

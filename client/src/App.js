@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Divider } from '@material-ui/core';
 import { VACCINE_ABI, VACCINE_ADRS } from './config';
 import GetStats from './components/GetStats';
-import PeopleList from './components/PeopleList';
+import PeopleList from './components/Table/PeopleTable';
 import CustomSnackbar from './components/CustomSnackbar';
 import CustomAppBar from './components/CustomAppBar';
 import Credits from './components/Credits';
@@ -102,7 +102,8 @@ function App() {
       .call()
       .then((ppls) => {
         ppls.forEach((ppl) => {
-          const { id, name, age, vaccineDate, vaccineLocation, vaccinated } = ppl;
+          const { id, name, vaccineDate, vaccineLocation, vaccinated } = ppl;
+          const age = parseInt(ppl.age);
           _people.push({
             id,
             name,
