@@ -1,4 +1,8 @@
 # ETH-Vaccinify
+Vaccination tracking system implemented via Blockchain technology (Ethereum & Solidity) and React.js. Made as part of an academic course (Blockchain Technology). 
+
+The system can be used by governmental healthcare departments and it includes functionalities like person registration (for a future vaccination), vaccination status update (per person), general statistics and more. 
+
 
 ### How to install
 
