@@ -4,6 +4,7 @@ import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox'
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Divider } from '@material-ui/core';
 
+// Statistics extraction and calculation
 function GetStats({ contract, account, isPermitted }) {
   const [show, setShow] = useState(false);
   const [totalRegistered, setTotalRegistered] = useState(0);
@@ -13,6 +14,7 @@ function GetStats({ contract, account, isPermitted }) {
 
   const totalUnVaccinated = totalRegistered - totalVaccinated;
 
+  // Statistics representation
   const showStats = async () => {
     contract.methods
       .getStats()
@@ -37,11 +39,13 @@ function GetStats({ contract, account, isPermitted }) {
     !show ? showStats() : setShow(false);
   };
 
+  // Age calculation
   const calculateAge = (dob) => {
     const diff = new Date(parseInt(new Date() - new Date(parseInt(dob))));
     return diff.getUTCFullYear() - 1970;
   };
 
+  // Layout
   return (
     <div>
       <div>

@@ -6,6 +6,7 @@ import { UserAddOutlined } from '@ant-design/icons';
 import { validateID } from '../Validators';
 import { useForm, Controller } from 'react-hook-form';
 
+// New person registration
 function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar }) {
   const [age, setAge] = useState(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,6 +29,7 @@ function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar
       });
   };
 
+  // Dynamic date and age update
   const handleDateChange = (date) => {
     if (date) {
       const today = new Date().getTime();
@@ -45,11 +47,13 @@ function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar
     setDialogOpen(!dialogOpen);
   };
 
+  // Age calculation according to the date
   const calculateAge = () => {
     const diff = new Date(parseInt(new Date() - new Date(parseInt(age))));
     return diff.getUTCFullYear() - 1970;
   };
 
+  // Submit action
   const onSubmit = (data) => {
     console.log(isValidDate);
     if (!isValidDate) return;
@@ -59,6 +63,7 @@ function AddPerson({ contract, account, setAddedPerson, isPermitted, setSnackBar
     registerPerson(data.id, data.fullName, birthDate);
   };
 
+  // Layout
   return (
     <div className="table-button">
       <IconButton className="register" onClick={handleDialogState} disabled={!isPermitted}>

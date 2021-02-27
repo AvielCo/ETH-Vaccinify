@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Divider } from '@material-ui/core';
 
+// Vaccination status check (per person with details)
 function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   const [id, setId] = useState('');
   const [details, setDetails] = useState({});
@@ -8,6 +9,7 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   const [validID, setValidID] = useState(false);
   const [personFound, setPersonFound] = useState(false);
 
+  // Check by ID
   const checkID = () => {
     contract.methods
       .checkIfVaccinated(id)
@@ -31,6 +33,7 @@ function VaccineCheck({ contract, account, isPermitted, setSnackBar }) {
   // eslint-disable-next-line
   useEffect(() => (!validID ? setShow(false) : checkID()), [validID]);
 
+  // Layout
   return (
     <div>
       <TextField hidden={!isPermitted} variant="standard" type="text" value={id} placeholder="ID" onChange={handleChange} />

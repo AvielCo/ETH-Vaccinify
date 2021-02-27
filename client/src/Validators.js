@@ -1,3 +1,4 @@
+// ID Validation
 export const validateID = (id) => {
   if (id.length !== 9) {
     return false;

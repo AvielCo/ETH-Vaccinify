@@ -23,6 +23,7 @@ function App() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [addedPerson, setAddedPerson] = useState(false);
 
+  // Permitted user (for data editing) check
   const checkIfPermitted = (contract, address) => {
     contract.methods
       .onlyPermittedPersonal(address)
@@ -36,6 +37,7 @@ function App() {
       });
   };
 
+  // Smart contract owner check (user that did deploy for the contract)
   const checkIfOwner = (contract, address) => {
     contract.methods
       .checkIsOwner(address)
@@ -86,6 +88,7 @@ function App() {
     }
   });
 
+  // System initialization
   const init = async () => {
     const web3 = new Web3(window.ethereum);
 
@@ -95,6 +98,7 @@ function App() {
     getPeople(contract).then(() => setLoading(false));
   };
 
+  // People table (data) extraction
   const getPeople = async (contract) => {
     let _people = [];
     await contract.methods
@@ -136,6 +140,7 @@ function App() {
     // eslint-disable-next-line
   }, [addedPerson]);
 
+  // Layout
   return (
     <div>
       <CustomAppBar isOwner={isOwner} account={account} contract={vaccineContract} setSnackBar={setSnackBar} />
